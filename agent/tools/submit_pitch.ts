@@ -6,7 +6,7 @@ import { consultants, normalize, opportunities } from "../lib/data";
 
 export default defineTool({
   description:
-    "Submit a completed consultant pitch to the proposal team. Use only when the user explicitly asks to send or submit the final pitch.",
+    "Present a completed consultant pitch for approval and submit it to the proposal team after approval. Use when the user clearly indicates that they are happy with the final draft.",
   inputSchema: z.object({
     opportunity: z
       .string()
