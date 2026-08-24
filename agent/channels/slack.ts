@@ -1,10 +1,32 @@
 import { slackChannel } from "eve/channels/slack";
+import { consultants, normalize, opportunities } from "../lib/data";
 
 function quote(text: string) {
   return text
     .split("\n")
     .map((line) => `> ${line}`)
     .join("\n");
+}
+
+function opportunityLabel(value: string) {
+  const normalized = normalize(value);
+  return (
+    opportunities.find(
+      (item) =>
+        normalize(item.id) === normalized ||
+        normalize(item.customer) === normalized,
+    )?.customer ?? value
+  );
+}
+
+function consultantLabel(value: string) {
+  const normalized = normalize(value);
+  return (
+    consultants.find(
+      (item) =>
+        normalize(item.id) === normalized || normalize(item.name) === normalized,
+    )?.name ?? value
+  );
 }
 
 export default slackChannel({
@@ -80,10 +102,12 @@ export default slackChannel({
           pitch?: unknown;
         };
         const pitch = typeof input.pitch === "string" ? input.pitch : "";
-        const opportunity =
+        const opportunityInput =
           typeof input.opportunity === "string" ? input.opportunity : "";
-        const consultant =
+        const consultantInput =
           typeof input.consultant === "string" ? input.consultant : "";
+        const opportunity = opportunityLabel(opportunityInput);
+        const consultant = consultantLabel(consultantInput);
         const actionPrefix = `eve_input:tool-approval:${request.requestId}`;
         const blocks = [
           {
