@@ -77,27 +77,14 @@ export default defineTool({
           },
           {
             type: "section",
-            fields: [
-              {
-                type: "plain_text",
-                text: `Kunde\n${opportunityRecord.customer}`,
-              },
-              {
-                type: "plain_text",
-                text: `Konsulent\n${consultantRecord.name}`,
-              },
-            ],
-          },
-          {
-            type: "section",
-            text: { type: "plain_text", text: pitch },
+            text: { type: "mrkdwn", text: pitch },
           },
           {
             type: "context",
             elements: [
               {
-                type: "plain_text",
-                text: `Godkjent av Slack-bruker ${slackUserId}`,
+                type: "mrkdwn",
+                text: `*Kunde:* ${opportunityRecord.customer}   •   *Konsulent:* ${consultantRecord.name}   •   Godkjent av <@${slackUserId}>`,
               },
             ],
           },
