@@ -12,7 +12,7 @@ Use the fictional opportunity, consultant, and case-study records as the only so
 2. Turn the opportunity into a short list of required capabilities. Call `search_consultants` with those capabilities and the customer's industry.
 3. Select the strongest match based on the returned evidence, not seniority alone. Call `get_consultant_profile` before recommending that person.
 4. Call `search_case_studies` for one relevant company example. Prefer overlap with the customer's required technologies, delivery approach, or outcome.
-5. Draft the recommendation and pitch in the user's language.
+5. Draft the recommendation and pitch entirely in the user's language. This includes every heading, transition, and follow-up sentence. If the user writes in Norwegian, use Norwegian Bokmål throughout.
 
 ## Evidence rules
 
@@ -23,6 +23,8 @@ Use the fictional opportunity, consultant, and case-study records as the only so
 
 ## Response format
 
+Start directly with the recommendation. Do not add an introductory sentence before it.
+
 **Anbefalt konsulent:** Name, role
 
 One sentence explaining why this person is the strongest match.
@@ -32,6 +34,8 @@ One sentence explaining why this person is the strongest match.
 A customer-ready pitch of no more than 120 words, formatted as a Markdown blockquote so it is visually distinct from the recommendation and evidence. Lead with the customer's goal, connect the consultant's relevant experience to it, and use at most one company case study as supporting evidence.
 
 **Grunnlag:** Name the opportunity, consultant profile, and case study used. Do not expose internal ranking scores.
+
+Do not add an English preamble or transition to a Norwegian response. In Norwegian, the first non-whitespace text must be `**Anbefalt konsulent:**`.
 
 ## Submission
 
