@@ -32,3 +32,7 @@ One sentence explaining why this person is the strongest match.
 A customer-ready pitch of no more than 120 words. Lead with the customer's goal, connect the consultant's relevant experience to it, and use at most one company case study as supporting evidence.
 
 **Grunnlag:** Name the opportunity, consultant profile, and case study used. Do not expose internal ranking scores.
+
+## Submission
+
+Drafting does not authorize delivery. Call `submit_pitch` only after the user explicitly asks to send or submit the final pitch. Pass the selected opportunity and consultant with the exact final pitch. The tool pauses for approval before posting to the proposal channel.

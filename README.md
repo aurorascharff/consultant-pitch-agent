@@ -1,6 +1,6 @@
 # Consultant pitch agent
 
-This Eve agent recommends a fictional consultant for a sales opportunity and writes an evidence-based pitch. Slack is its primary interface. The project demonstrates tools, a load-on-demand skill, evals, Vercel deployment, and Agent Runs.
+This Eve agent recommends a fictional consultant for a sales opportunity and writes an evidence-based pitch. Slack is its primary interface. The project demonstrates tools, a load-on-demand skill, human approval, evals, Vercel deployment, and Agent Runs.
 
 All people, customers, projects, and results are synthetic.
 
@@ -46,7 +46,7 @@ Run only the main demo case:
 npm run eval -- nordlys-pitch
 ```
 
-The suite verifies the tool calls, recommendation, supporting evidence, and behavior when a requested consultant does not exist.
+The suite verifies the tool calls, recommendation, approval gate, supporting evidence, and behavior when a requested consultant does not exist.
 
 ## Deploy with Slack
 
@@ -56,6 +56,7 @@ Create a Slack app in a test workspace with these bot scopes:
 
 ```text
 app_mentions:read
+channels:history
 chat:write
 ```
 
@@ -64,19 +65,30 @@ Install the app, then add its credentials to the Vercel project as Production en
 ```bash
 SLACK_BOT_TOKEN=xoxb-your_token_here
 SLACK_SIGNING_SECRET=your_signing_secret_here
+PITCH_SUBMISSIONS_CHANNEL_ID=your_destination_channel_id
 ```
 
-Redeploy the project. In the Slack app's **Event Subscriptions**, use this Request URL and subscribe to the `app_mention` bot event:
+Create a public `#submitted-pitches` channel, invite `@KonsuBot`, and copy its channel ID into `PITCH_SUBMISSIONS_CHANNEL_ID`. Redeploy the project. In the Slack app's **Event Subscriptions**, use this Request URL and subscribe to the `app_mention` bot event:
 
 ```text
 https://consultant-pitch-agent.vercel.app/eve/v1/slack
 ```
+
+Use the same URL under **Interactivity & Shortcuts** so Slack can deliver approval-button responses.
 
 Invite `@KonsuBot` to a channel, then send:
 
 ```text
 @KonsuBot Vi skal svare på muligheten Nordlys Energi. Finn en konsulent som passer, og lag en kort pitch. Vektlegg React, Next.js og migrering.
 ```
+
+In the same thread, ask the bot to submit the final draft:
+
+```text
+@KonsuBot Send pitchen til tilbudsteamet.
+```
+
+Eve parks the run and renders an approval card in Slack. Only the person who started the thread can approve it. After approval, the protected `submit_pitch` tool posts the exact pitch to `#submitted-pitches`.
 
 Open **Observability** > **Agent Runs** in the Vercel project to inspect the conversation, model calls, tool activity, duration, and token usage.
 
