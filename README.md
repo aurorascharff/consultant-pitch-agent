@@ -1,8 +1,10 @@
 # Consultant pitch agent
 
-This Eve agent recommends a fictional consultant for a sales opportunity and writes an evidence-based pitch. It demonstrates tools, a load-on-demand skill, evals, Microsoft Teams, Vercel deployment, and Agent Runs.
+This Eve agent recommends a fictional consultant for a sales opportunity and writes an evidence-based pitch. Slack is its primary interface. The project demonstrates tools, a load-on-demand skill, evals, Vercel deployment, and Agent Runs.
 
 All people, customers, projects, and results are synthetic.
+
+**Live deployment:** [consultant-pitch-agent.vercel.app](https://consultant-pitch-agent.vercel.app)
 
 ## Run locally
 
@@ -46,32 +48,53 @@ npm run eval -- nordlys-pitch
 
 The suite verifies the tool calls, recommendation, supporting evidence, and behavior when a requested consultant does not exist.
 
-## Deploy and inspect runs
+## Deploy with Slack
 
-Link the project and deploy it to Vercel:
+Import the GitHub repository into Vercel and keep the detected **eve** preset. The deployment serves a status page at the project URL.
 
-```bash
-npx eve link
-npm run deploy
-```
-
-Open **Observability** > **Agent Runs** in the Vercel project to inspect conversations, model calls, tool activity, duration, and token usage.
-
-Connect the terminal interface to the deployment:
-
-```bash
-npx eve dev https://your_project.vercel.app
-```
-
-## Connect Microsoft Teams
-
-The Teams channel receives Bot Framework activities at:
+Create a Slack app in a test workspace with these bot scopes:
 
 ```text
-POST https://your_project.vercel.app/eve/v1/teams
+app_mentions:read
+chat:write
 ```
 
-Create a Microsoft Entra application and Azure Bot, enable its Teams channel, and set the endpoint above as the bot's messaging endpoint. Add these variables to the Vercel project, then redeploy:
+Install the app, then add its credentials to the Vercel project as Production environment variables:
+
+```bash
+SLACK_BOT_TOKEN=xoxb-your_token_here
+SLACK_SIGNING_SECRET=your_signing_secret_here
+```
+
+Redeploy the project. In the Slack app's **Event Subscriptions**, use this Request URL and subscribe to the `app_mention` bot event:
+
+```text
+https://consultant-pitch-agent.vercel.app/eve/v1/slack
+```
+
+Invite `@KonsuBot` to a channel, then send:
+
+```text
+@KonsuBot Vi skal svare på muligheten Nordlys Energi. Finn en konsulent som passer, og lag en kort pitch. Vektlegg React, Next.js og migrering.
+```
+
+Open **Observability** > **Agent Runs** in the Vercel project to inspect the conversation, model calls, tool activity, duration, and token usage.
+
+You can also connect Eve's terminal interface to the same production agent:
+
+```bash
+npx eve dev https://consultant-pitch-agent.vercel.app
+```
+
+## Optional Microsoft Teams channel
+
+The repository keeps a Teams channel at:
+
+```text
+POST https://consultant-pitch-agent.vercel.app/eve/v1/teams
+```
+
+To activate it, create a Microsoft Entra application and Azure Bot, then add these variables to Vercel:
 
 ```bash
 TEAMS_APP_ID=your_microsoft_application_id_here
