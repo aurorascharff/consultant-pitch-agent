@@ -7,7 +7,7 @@ export default defineEval({
     await t.send(
       "Vi skal svare på muligheten Nordlys Energi. Finn Amalie Berg og lag en kort pitch.",
     );
-    await t.send("Send pitchen til tilbudsteamet.");
+    await t.send("Denne er bra. Jeg er fornøyd med pitchen.");
 
     t.calledTool("submit_pitch", { status: "pending" });
     t.requireInputRequest({ toolName: "submit_pitch" });

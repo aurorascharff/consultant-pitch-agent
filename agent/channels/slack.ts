@@ -32,17 +32,29 @@ export default slackChannel({
             request.kind === "tool-approval"
               ? `eve_input:tool-approval:${request.requestId}`
               : `eve_input:${request.requestId}`;
+          const actions =
+            options.length > 0
+              ? options.map((option, index) => ({
+                  type: "button",
+                  action_id: `${actionPrefix}:button:${index}`,
+                  text: { type: "plain_text", text: option.label },
+                  value: option.id,
+                  ...(option.style ? { style: option.style } : {}),
+                }))
+              : [
+                  {
+                    type: "button",
+                    action_id: `eve_input_freeform:${request.requestId}`,
+                    text: { type: "plain_text", text: "Svar" },
+                    style: "primary",
+                    value: request.requestId,
+                  },
+                ];
           const blocks: unknown[] = [
             {
               type: "card",
               body: { type: "mrkdwn", text: request.prompt },
-              actions: options.map((option, index) => ({
-                type: "button",
-                action_id: `${actionPrefix}:button:${index}`,
-                text: { type: "plain_text", text: option.label },
-                value: option.id,
-                ...(option.style ? { style: option.style } : {}),
-              })),
+              actions,
             },
           ];
           const posted = await channel.thread.post({
