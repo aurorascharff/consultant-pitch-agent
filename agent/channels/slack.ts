@@ -74,9 +74,12 @@ export default slackChannel({
                 ];
           const blocks: unknown[] = [
             {
-              type: "card",
-              body: { type: "mrkdwn", text: request.prompt },
-              actions,
+              type: "section",
+              text: { type: "mrkdwn", text: request.prompt },
+            },
+            {
+              type: "actions",
+              elements: actions,
             },
           ];
           const posted = await channel.thread.post({
@@ -111,18 +114,26 @@ export default slackChannel({
         const actionPrefix = `eve_input:tool-approval:${request.requestId}`;
         const blocks = [
           {
-            type: "card",
-            body: {
+            type: "section",
+            text: {
               type: "mrkdwn",
               text: [
                 "*Godkjenn konsulentforslaget*",
                 `*Kunde:* ${opportunity}`,
                 `*Konsulent:* ${consultant}`,
-                "",
-                quote(pitch),
               ].join("\n"),
             },
-            actions: [
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: quote(pitch),
+            },
+          },
+          {
+            type: "actions",
+            elements: [
               {
                 type: "button",
                 action_id: `${actionPrefix}:button:0`,
