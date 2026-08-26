@@ -3,8 +3,8 @@ import { mkdir, readFile, readdir, rename } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const args = process.argv.slice(2);
-const localUrl = process.env.EVE_EVAL_URL ?? "http://127.0.0.1:2000/";
+const args = process.argv.slice(2).filter((arg) => arg !== "--");
+const defaultLocalUrl = "http://127.0.0.1:2000/";
 const hasExplicitUrl = args.some(
   (arg) => arg === "--url" || arg.startsWith("--url="),
 );
@@ -18,6 +18,18 @@ async function isReachable(url) {
     return true;
   } catch {
     return false;
+  }
+}
+
+async function readRecordedDevUrl() {
+  try {
+    const stateFile = fileURLToPath(
+      new URL("./.eve/dev-server-state.v1.json", import.meta.url),
+    );
+    const state = JSON.parse(await readFile(stateFile, "utf8"));
+    return typeof state.url === "string" ? state.url : undefined;
+  } catch {
+    return undefined;
   }
 }
 
@@ -61,9 +73,23 @@ async function quarantineStaleWorkflowState() {
 const eveArgs = ["eval", ...args];
 
 if (!hasExplicitUrl && !args.includes("--list")) {
-  if (await isReachable(localUrl)) {
-    console.log(`Using the running eve server at ${localUrl}`);
-    eveArgs.push("--url", localUrl);
+  const candidateUrls = [
+    process.env.EVE_EVAL_URL,
+    await readRecordedDevUrl(),
+    defaultLocalUrl,
+  ].filter((url, index, urls) => url && urls.indexOf(url) === index);
+  let runningUrl;
+
+  for (const url of candidateUrls) {
+    if (await isReachable(url)) {
+      runningUrl = url;
+      break;
+    }
+  }
+
+  if (runningUrl) {
+    console.log(`Using the running eve server at ${runningUrl}`);
+    eveArgs.push("--url", runningUrl);
   } else {
     await quarantineStaleWorkflowState();
   }
