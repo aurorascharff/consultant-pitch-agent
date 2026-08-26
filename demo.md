@@ -191,6 +191,7 @@ Say:
 - The tools are deliberately narrow. The model can request one opportunity or search a constrained consultant set. It does not receive unrestricted access to an entire system.
 - In a production version, these tools could connect to a CRM, a CV system, resource planning, and an approved content library. Each connection would use its own credentials, scopes, and authorization checks.
 - The instructions carry permanent behavior, such as always retrieving the named opportunity first. The skill carries the pitch-writing procedure that is loaded only for this kind of task. The tools carry trusted data and actions.
+- This demo keeps Slack portable: the bot token and signing secret are environment variables. That works with any Slack workspace where the app has been installed. If we were committed to Vercel, Vercel Connect could manage installation credentials, token rotation, multiple workspace installations, and webhook verification for us. It would make the channel configuration cleaner, but it would not replace the Slack user identity or the authorization check inside `submit_pitch`.
 
 ### Run the completed agent locally
 
