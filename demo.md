@@ -3,7 +3,7 @@
 **Length:** About 15 minutes  
 **Repository:** [aurorascharff/consultant-pitch-agent](https://github.com/aurorascharff/consultant-pitch-agent)
 
-The demo has two parts. Spend about five minutes scaffolding a small eve agent and changing its behavior through `instructions.md`. Use the remaining ten minutes for the completed consultant pitch agent, including tools, skills, Slack, human approval, and Vercel Agent Runs.
+The demo has two parts. Spend about five minutes scaffolding a small eve agent, inspecting the generated source while dependencies install, and changing its behavior through `instructions.md`. Use the remaining ten minutes for the completed consultant pitch agent, including visible tool calls, local approval preview, evals, Slack delivery, and Vercel Agent Runs.
 
 All customers, consultants, projects, and results in the consultant demo are synthetic.
 
@@ -12,6 +12,8 @@ All customers, consultants, projects, and results in the consultant demo are syn
 - Confirm that the deployed agent responds in Slack.
 - Confirm that approval posts the unchanged pitch to `#submitted-pitches`.
 - Confirm that the deployed run appears under **Observability → Agent Runs**.
+- Add `PITCH_SUBMISSION_MODE=preview` to the completed repository's local environment so terminal approval can finish without posting to Slack.
+- Run `npm run eval` once and confirm that all four evals pass.
 - Make sure `/Users/aurorascharff/Documents/Fagfestivalen/my-agent` does not already exist.
 - Open the completed `consultant-pitch-agent` repository in VS Code.
 - Prepare these four screens in order:
@@ -38,15 +40,28 @@ cd /Users/aurorascharff/Documents/Fagfestivalen
 npx eve@latest init my-agent
 ```
 
-While the initializer runs:
+As soon as the project directory appears, open it in VS Code while dependencies continue installing.
 
-- Point out that this creates a regular code repository rather than configuring an agent in a separate dashboard.
-- Choose **Start eve dev** when the initializer offers the next action. The CLI opens `eve dev --input /model` so the model can be configured immediately.
+Show the generated source:
+
+- `agent/agent.ts` contains the selected model and runtime options.
+- `agent/instructions.md` contains the standing behavior sent with every model call.
+- `agent/channels/eve.ts` protects the HTTP interface with Vercel OIDC and a local-development identity.
+- `package.json` contains the development, build, deployment, and eval commands.
+- `AGENTS.md` tells coding agents where eve's local documentation lives and how to extend the project safely.
+
+Say:
+
+- The CLI is installing dependencies, but the application is already inspectable. This is a regular source repository rather than configuration hidden in a dashboard.
+- The scaffold is intentionally small. Tools, skills, connections, Slack, schedules, and evals are added as files only when the application needs them.
+
+When the initializer offers the next action:
+
+- Choose **Start eve dev**. The CLI opens `eve dev --input /model` so the model can be configured immediately.
 - Select **AI Gateway via Project**. The agent uses the Vercel project linked by the CLI, so no API key needs to be pasted on stage.
-- Explain that this is the easiest option for this demo. The initializer can also use AI Gateway through an API key, a ChatGPT subscription through Codex CLI, or a model provider directly.
+- Explain that the initializer can also use AI Gateway through an API key, a ChatGPT subscription through Codex CLI, or a model provider directly.
 - Keep the default model unless you want to show the model picker.
-- Let the initializer install dependencies and create the project.
-- Open `/add` and briefly show the available channels, MCP connections, extensions, and observability integrations. The scaffold can add Microsoft Teams, Slack, or another channel without changing the core agent. Do not configure a real channel on stage.
+- Once the terminal interface is ready, open `/add` and briefly show the available channels, MCP connections, extensions, and observability integrations. These are application capabilities that the CLI can install without changing the core agent. Do not configure one on stage.
 
 ### Try the default agent
 
@@ -58,34 +73,25 @@ Send a simple first message:
 hey
 ```
 
-Point out that the generic answer proves the agent is running, but it does not have a useful job yet. Then send:
-
-```text
-Vi trenger en konsulent til å modernisere en kundeportal for et energiselskap. React og Next.js er viktig, og migreringen må kunne skje trinnvis.
-```
+Point out that the generic answer proves the agent is running, but it does not have a useful job yet.
 
 Say:
 
 - The scaffold already runs. We have a model, a durable session, and a local interface.
-- The response is still generic because we have not told the agent what role it has or how to structure this task.
+- The response is generic because we have not told the agent what job it has.
 - I can change that behavior without rewriting the runtime. The stable role and rules live in `agent/instructions.md`.
 
 Keep the terminal running and open `/Users/aurorascharff/Documents/Fagfestivalen/my-agent` in VS Code beside it.
 
 ### Inspect the scaffold
 
-Open the new project and briefly show the generated files:
-
-- `agent/agent.ts` contains the selected model.
-- `agent/instructions.md` contains the standing instructions sent with every model call.
-- `package.json` contains the commands for development, builds, deployment, and evals.
-- The linked Vercel project supplies the AI Gateway access for this demo, so there is no key to reveal.
+Return to the generated files you inspected during installation.
 
 Say:
 
 - The model configuration and the agent behavior are separate. `agent.ts` chooses how the model runs. `instructions.md` defines the job it should perform.
 - Instructions are Markdown, so they can be reviewed and deployed with the rest of the application.
-- Tools, skills, channels, connections, and evals appear as files when the application needs them.
+- `agent/channels/eve.ts` also shows that authentication begins at the channel boundary. During `eve dev`, the terminal receives a synthetic local-development identity. A production channel supplies a real caller identity.
 
 ### Change the agent's behavior
 
@@ -127,21 +133,22 @@ Return to the running eve terminal. If it stopped while the file was edited, res
 
 ```bash
 cd /Users/aurorascharff/Documents/Fagfestivalen/my-agent
-pnpm dev
+npm run dev
 ```
 
-Send the same request again:
+Send the prompt that will be reused throughout the rest of the demo:
 
 ```text
-Vi trenger en konsulent til å modernisere en kundeportal for et energiselskap. React og Next.js er viktig, og migreringen må kunne skje trinnvis.
+Lag en pitch for Havspor Logistikk. Vi trenger en konsulent som kan samle operasjonelle data, bygge integrasjoner og lage et React-dashboard.
 ```
 
-Show that the response now follows the consultant-specific structure and stays within the information supplied in the prompt.
+Show that the response now follows the consultant-specific structure and stays within the information supplied in the prompt. It will usually ask for systems, platforms, budget, or delivery constraints under **Neste steg**.
 
 Say:
 
 - We changed the behavior by changing one Markdown file. eve rebuilt the agent and the next session used the new instructions.
-- This is enough for a focused assistant, but it cannot find a real consultant or prove its claims. It has no business data and no actions yet.
+- This is helpful, but it can still only talk to us. It does not know whether Havspor exists in our sales pipeline, cannot search a consultant database, and cannot support a recommendation with approved evidence.
+- The limitation is visible in the terminal: there are no tool calls. The model only has the prompt and its standing instructions.
 - A useful consultant agent needs bounded access to opportunities, profiles, availability, and approved customer evidence. It also needs a review step before it sends anything.
 - I have prepared that version so we can look at the application around the model rather than live-code every integration.
 
@@ -165,7 +172,7 @@ Say:
 Start with the familiar files:
 
 - `agent/agent.ts` selects the model, like the scaffolded project.
-- `agent/instructions.md` now contains the complete standing rules for evidence, language, drafting, and submission.
+- `agent/instructions.md` contains the standing rules that should apply on every relevant turn. It tells the agent to retrieve a named opportunity first, use trusted records, keep Norwegian responses consistent, and separate drafting from submission.
 
 Then show what the completed application adds:
 
@@ -173,8 +180,9 @@ Then show what the completed application adds:
 - `agent/tools/search_consultants.ts` finds candidates from the requested skills and industry.
 - `agent/tools/get_consultant_profile.ts` retrieves the approved facts for one consultant.
 - `agent/tools/search_case_studies.ts` finds company evidence that supports the pitch.
-- `agent/tools/submit_pitch.ts` is the side-effecting action. It requires approval before the pitch can be delivered.
-- `agent/skills/write-sales-pitch/SKILL.md` defines the multi-step procedure for combining those sources without attributing a company case study to an individual consultant.
+- `agent/tools/submit_pitch.ts` is the side-effecting action. `approval: always()` makes approval a runtime gate rather than a sentence the model can ignore. Its local preview mode completes without posting, while Slack mode requires a Slack user.
+- `agent/skills/write-sales-pitch/SKILL.md` defines the task-specific procedure after the opportunity is known: search, select, gather one company case, and draft without attributing a company case study to an individual consultant.
+- `agent/channels/eve.ts` supplies the authenticated HTTP entry point used by the terminal and other clients.
 - `agent/channels/slack.ts` connects the same agent to Slack and renders the approval request in the conversation.
 - `evals/` checks recommendation evidence, Norwegian language, unsupported claims, and approval behavior.
 
@@ -183,7 +191,7 @@ Say:
 - This is the same filesystem model as the starter. The project becomes more capable by adding explicit application code around it.
 - The tools are deliberately narrow. The model can request one opportunity or search a constrained consultant set. It does not receive unrestricted access to an entire system.
 - In a production version, these tools could connect to a CRM, a CV system, resource planning, and an approved content library. Each connection would use its own credentials, scopes, and authorization checks.
-- The skill carries the procedure. The tools carry the trusted data and actions. The instructions carry the permanent behavior.
+- The instructions carry permanent behavior, such as always retrieving the named opportunity first. The skill carries the pitch-writing procedure that is loaded only for this kind of task. The tools carry trusted data and actions.
 
 ### Run the completed agent locally
 
@@ -192,30 +200,67 @@ Say:
 Run:
 
 ```bash
-pnpm dev
+npm run dev
 ```
 
 Send:
 
 ```text
-Vi skal svare på muligheten Nordlys Energi. Finn en konsulent som passer, og lag en kort pitch. Vektlegg React, Next.js og migrering.
+Lag en pitch for Havspor Logistikk. Vi trenger en konsulent som kan samle operasjonelle data, bygge integrasjoner og lage et React-dashboard.
 ```
 
 As the run progresses:
 
-- Point out each tool call in the terminal.
-- Show that the agent first retrieves the opportunity before it searches for a consultant.
-- Show that it opens the selected profile before making personal claims.
-- Show that it retrieves one relevant case study as company evidence.
+- Point out each tool call in the terminal: `get_opportunity`, `search_consultants`, `get_consultant_profile`, and `search_case_studies`.
+- Show that the agent first retrieves Havspor's opportunity record before it searches for a consultant.
+- Show that it opens Erik Lund's profile before making personal claims.
+- Show that it retrieves one logistics case study as company evidence.
 - Wait for the recommendation and the blockquoted **Endelig pitch**.
 
 Say:
 
 - The model is not answering from training data. It is building the recommendation from records returned by the application.
 - The final response names the evidence it used, so the person reviewing it can trace the recommendation.
-- The local run proves the application works, but the person doing this job would not normally sit inside the terminal. Our team works in Slack, so that is the production interface I configured.
+- This is the same user prompt as the scaffold. The difference is the application context and capabilities around the model, which are visible as tool calls.
 
-Stop the local process and switch to Slack.
+### Approve the local preview
+
+When the final pitch is ready, reply:
+
+```text
+Denne ser bra ut.
+```
+
+Pause when the terminal shows the proposed `submit_pitch` call and its approval control.
+
+Say:
+
+- The model proposed a side effect, but it has not executed yet. `approval: always()` parks the durable workflow before the tool body runs.
+- We can inspect the exact opportunity, consultant, and pitch arguments before approving. This is a runtime guarantee, not just agent behavior written in a prompt.
+- The terminal entered through `eve dev`, so eve attached a `local-dev` identity. With `PITCH_SUBMISSION_MODE=preview`, approval completes the call locally and returns `submitted: false`; it cannot post to Slack or masquerade as a Slack user.
+
+Choose **Approve** and show the local preview result.
+
+Say:
+
+- Approval and authorization solve different problems. Approval confirms this exact action. Authorization determines which caller is allowed to produce the real side effect.
+- The local path is deliberately a preview. In Slack mode, the same tool requires the authenticated Slack user supplied by the channel.
+
+### Run the evals
+
+Stop the local process, then run:
+
+```bash
+npm run eval
+```
+
+As the four evals complete:
+
+- Point out that the eval runner boots the real agent HTTP surface rather than grading a static prompt.
+- Show the gates for the opportunity, consultant search, selected profile, case study, Norwegian opening, unsupported consultant behavior, and pending approval.
+- Explain that the evals are the repeatable version of the checks we just made by eye in the terminal.
+
+Then switch to Slack.
 
 ### Run the deployed agent in Slack
 
@@ -229,7 +274,7 @@ Say:
 Send:
 
 ```text
-@KonsuBot Vi skal svare på muligheten Nordlys Energi. Finn en konsulent som passer, og lag en kort pitch. Vektlegg React, Next.js og migrering.
+@KonsuBot Lag en pitch for Havspor Logistikk. Vi trenger en konsulent som kan samle operasjonelle data, bygge integrasjoner og lage et React-dashboard.
 ```
 
 While the agent works:
@@ -239,7 +284,7 @@ While the agent works:
 - If you want to show conversational state, request one small change in the same thread:
 
   ```text
-  Gjør pitchen litt kortere, men behold resultatene fra migreringen.
+  Gjør pitchen litt kortere, men behold koblingen mellom integrasjonene og dashboardet.
   ```
 
 - Show that the agent uses the existing thread context when it revises the draft.
@@ -254,7 +299,8 @@ Say:
 
 - That sentence does not submit the pitch by itself. It tells the agent to call the protected `submit_pitch` tool.
 - The tool pauses the durable workflow and renders the exact final text in an approval card.
-- Authorization and approval solve different problems. Authorization determines whether this person can perform the action. Approval lets the person inspect and confirm this specific pitch.
+- Unlike the local preview, the Slack channel attaches the real Slack user to the resumed turn. The tool rechecks that identity before it posts anything.
+- Approval still lets the person inspect and confirm this specific pitch. Authentication does not replace approval, and approval does not create an identity.
 
 Review the approval card, then click **Godkjenn**.
 

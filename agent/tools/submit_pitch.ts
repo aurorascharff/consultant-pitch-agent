@@ -24,18 +24,6 @@ export default defineTool({
   }),
   approval: always(),
   async execute({ opportunity, consultant, pitch }, ctx) {
-    const auth = ctx.session.auth.current;
-    const slackUserId = auth?.attributes.user_id;
-
-    if (
-      auth?.authenticator !== "slack-webhook" ||
-      auth.principalType !== "user" ||
-      typeof slackUserId !== "string" ||
-      slackUserId.length === 0
-    ) {
-      throw new Error("Only an authenticated Slack user can submit a pitch.");
-    }
-
     const normalizedOpportunity = normalize(opportunity);
     const opportunityRecord = opportunities.find(
       (item) =>
@@ -56,6 +44,46 @@ export default defineTool({
 
     if (!consultantRecord) {
       throw new Error(`Unknown consultant: ${consultant}`);
+    }
+
+    const auth = ctx.session.auth.current;
+    const submissionMode = process.env.PITCH_SUBMISSION_MODE ?? "slack";
+
+    if (submissionMode === "preview") {
+      if (
+        auth?.authenticator !== "local-dev" ||
+        auth.principalType !== "local-dev"
+      ) {
+        throw new Error(
+          "Pitch preview mode is only available through the local eve development server.",
+        );
+      }
+
+      return {
+        approved: true,
+        consultant: consultantRecord.name,
+        customer: opportunityRecord.customer,
+        mode: "local-preview",
+        pitch,
+        submitted: false,
+      };
+    }
+
+    if (submissionMode !== "slack") {
+      throw new Error(
+        `Unsupported PITCH_SUBMISSION_MODE: ${submissionMode}. Use "slack" or "preview".`,
+      );
+    }
+
+    const slackUserId = auth?.attributes.user_id;
+
+    if (
+      auth?.authenticator !== "slack-webhook" ||
+      auth.principalType !== "user" ||
+      typeof slackUserId !== "string" ||
+      slackUserId.length === 0
+    ) {
+      throw new Error("Only an authenticated Slack user can submit a pitch.");
     }
 
     const channelId = process.env.PITCH_SUBMISSIONS_CHANNEL_ID;
@@ -99,9 +127,11 @@ export default defineTool({
     }
 
     return {
+      approved: true,
       submitted: true,
       customer: opportunityRecord.customer,
       consultant: consultantRecord.name,
+      mode: "slack",
       destination: channelId,
       messageId: typeof response.ts === "string" ? response.ts : undefined,
     };

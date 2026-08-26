@@ -1,4 +1,5 @@
 ---
+name: write-sales-pitch
 description: Recommend a consultant and write a short, evidence-based pitch for a customer opportunity.
 ---
 
@@ -8,12 +9,11 @@ Use the fictional opportunity, consultant, and case-study records as the only so
 
 ## Process
 
-1. Call `get_opportunity` to retrieve the customer's needs, constraints, and desired outcome. If the opportunity is missing, stop and ask for a valid customer.
-2. If the user requests a named consultant, call `get_consultant_profile` for that person before searching for alternatives. If the profile is missing, stop and ask whether the user wants you to search for another consultant.
-3. Turn the opportunity into a short list of required capabilities. Call `search_consultants` with those capabilities and the customer's industry.
-4. Select the strongest match based on the returned evidence, not seniority alone. Call `get_consultant_profile` before recommending that person.
-5. Call `search_case_studies` for one relevant company example. Prefer overlap with the customer's required technologies, delivery approach, or outcome.
-6. Draft the recommendation and pitch entirely in the user's language. This includes every heading, transition, and follow-up sentence. If the user writes in Norwegian, use Norwegian Bokmål throughout.
+1. Use the opportunity record already retrieved by the agent as the source for the customer's needs, constraints, and desired outcome.
+2. Turn the opportunity into a short list of required capabilities. Call `search_consultants` with those capabilities and the customer's industry.
+3. Select the strongest match based on the returned evidence, not seniority alone. Call `get_consultant_profile` before recommending that person.
+4. Call `search_case_studies` for one relevant company example. Prefer overlap with the customer's required technologies, delivery approach, or outcome.
+5. Draft the recommendation and pitch entirely in the user's language. This includes every heading, transition, and follow-up sentence. If the user writes in Norwegian, use Norwegian Bokmål throughout.
 
 ## Evidence rules
 
