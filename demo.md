@@ -249,7 +249,14 @@ Say:
 - From here I could run `eve deploy`. I would choose Vercel because eve connects the application to the managed services we discussed earlier: the web runtime, Vercel Workflow for durable runs and approval pauses, Vercel Cron for schedules, Vercel Sandbox for isolated code execution, project identity for AI Gateway, and Agent Runs for observability.
 - Vercel is the managed path, not a requirement for the agent source. Eve can also build a standard Nitro Node server with `eve build` and run it with `eve start` on a Node or container platform.
 - On another host, we would operate the surrounding pieces ourselves: persistent Workflow storage, a sandbox backend, authentication and secrets, ingress for `/eve/` and `/.well-known/workflow/`, scheduling, TLS, scaling, restarts, logs, and OpenTelemetry.
-- I will not deploy live. I already have the same repository running in Slack, so we can move straight to the production interaction.
+- I will not deploy live. I already have the same repository deployed, so let us briefly open it before moving to Slack.
+
+[Open `https://consultant-pitch-agent.vercel.app` in the browser for a few seconds.]
+
+Say:
+
+- This is eve's default deployment page. It confirms that the agent is ready and accepting messages.
+- There is no separate Next.js interface attached. The terminal and Slack are channels into this deployed agent runtime.
 
 Source notes:
 
@@ -257,7 +264,7 @@ Source notes:
 - [Deploy Eve to Vercel](https://github.com/vercel/eve/blob/main/docs/guides/deployment/vercel.mdx)
 - [Self-host Eve](https://github.com/vercel/eve/blob/main/docs/guides/deployment/self-hosting.md)
 
-Then switch to Slack.
+[Switch to Slack.]
 
 ### Run the pre-deployed agent in Slack
 
