@@ -21,6 +21,15 @@ export default defineEval({
       satisfies(
         (reply) =>
           typeof reply === "string" &&
+          !/hvilke datakilder|skal én konsulent|har dere en liste/i.test(reply),
+        "does not replace the pitch with avoidable clarification questions",
+      ),
+    );
+    t.check(
+      t.reply,
+      satisfies(
+        (reply) =>
+          typeof reply === "string" &&
           reply.trimStart().startsWith("**Anbefalt konsulent:**"),
         "starts directly with the Norwegian recommendation heading",
       ),

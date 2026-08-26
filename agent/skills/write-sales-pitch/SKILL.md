@@ -11,6 +11,7 @@ description: Recommend a consultant and write a short, evidence-based pitch for 
 2. Turn it into a short list of required capabilities. Call `search_consultants` with those capabilities and the customer's industry.
 3. Pick the strongest match on the returned evidence, not seniority. Call `get_consultant_profile` before recommending anyone.
 4. Call `search_case_studies` for one relevant company example, preferring overlap in technology, delivery approach, or outcome.
+5. Complete this process in the first response. Do not pause for clarifying questions when the named opportunity exists; record missing implementation details as gaps without blocking the recommendation.
 
 ## Attribution
 
