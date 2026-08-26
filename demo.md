@@ -260,6 +260,31 @@ As the four evals complete:
 - Show the gates for the opportunity, consultant search, selected profile, case study, Norwegian opening, unsupported consultant behavior, and pending approval.
 - Explain that the evals are the repeatable version of the checks we just made by eye in the terminal.
 
+### Bridge from local testing to deployment
+
+[Return to the terminal before opening Slack.]
+
+Say:
+
+- We have now tried the real agent locally, inspected its tool calls and approval boundary, and turned the important behavior into repeatable evals. To use the same agent from Slack, it needs a public production runtime.
+- I am going to deploy it with `eve deploy`. I am choosing Vercel because eve can connect the application to the managed services we discussed earlier: the web runtime, Vercel Workflow for durable runs and approval pauses, Vercel Cron for authored schedules, Vercel Sandbox when the agent needs isolated code execution, project identity for AI Gateway, and deployment observability through Agent Runs.
+- Vercel is the managed path, not a requirement for the agent source. Eve can also build a standard Nitro Node server with `eve build` and run it with `eve start` on a Node or container platform.
+- On another host, we would operate the surrounding pieces ourselves: persistent Workflow storage, a Docker, microsandbox, or custom sandbox backend, production authentication and secrets, ingress for both `/eve/` and `/.well-known/workflow/`, scheduling, TLS, scaling, restarts, logs, and OpenTelemetry. The same filesystem-based agent configuration remains portable; Vercel means I do not have to assemble and operate those pieces for this demo.
+
+Run:
+
+```bash
+npm run deploy
+```
+
+If the production deployment is already prepared for the talk, explain what the command does and switch to the deployed Slack agent instead of waiting for a new build.
+
+Source notes:
+
+- [Eve deployment overview](https://github.com/vercel/eve/blob/main/docs/guides/deployment/overview.md)
+- [Deploy Eve to Vercel](https://github.com/vercel/eve/blob/main/docs/guides/deployment/vercel.mdx)
+- [Self-host Eve](https://github.com/vercel/eve/blob/main/docs/guides/deployment/self-hosting.md)
+
 Then switch to Slack.
 
 ### Run the deployed agent in Slack
