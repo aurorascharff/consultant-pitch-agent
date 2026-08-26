@@ -29,12 +29,10 @@ if (!hasExplicitUrl && !args.includes("--list") && (await isReachable(localUrl))
 const eveBin = fileURLToPath(
   new URL("./node_modules/eve/bin/eve.js", import.meta.url),
 );
-const nodeOptions = [
-  process.env.NODE_OPTIONS,
-  "--disable-warning=MaxListenersExceededWarning",
-]
-  .filter(Boolean)
-  .join(" ");
+const warningFlag = "--disable-warning=MaxListenersExceededWarning";
+const nodeOptions = process.env.NODE_OPTIONS?.includes(warningFlag)
+  ? process.env.NODE_OPTIONS
+  : [process.env.NODE_OPTIONS, warningFlag].filter(Boolean).join(" ");
 
 const child = spawn(process.execPath, [eveBin, ...eveArgs], {
   stdio: "inherit",
