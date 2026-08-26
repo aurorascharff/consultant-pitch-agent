@@ -1,26 +1,5 @@
 # Demo: Build and run an eve agent
 
-**Length:** About 15 minutes  
-**Repository:** [aurorascharff/consultant-pitch-agent](https://github.com/aurorascharff/consultant-pitch-agent)
-
-The demo has two parts. Spend about five minutes scaffolding a small eve agent, inspecting the generated source while dependencies install, and changing its behavior through `instructions.md`. Use the remaining ten minutes for the completed consultant pitch agent, including visible tool calls, the local approval and authorization boundary, evals, Slack delivery, and Vercel Agent Runs.
-
-All customers, consultants, projects, and results in the consultant demo are synthetic.
-
-## Prepare before the talk
-
-- Confirm that the deployed agent responds in Slack.
-- Confirm that approval posts the unchanged pitch to `#submitted-pitches`.
-- Confirm that the deployed run appears under **Observability → Agent Runs**.
-- Run `npm run eval` once and confirm that all four evals pass.
-- Make sure `/Users/aurorascharff/Documents/Fagfestivalen/my-agent` does not already exist.
-- Open the completed `consultant-pitch-agent` repository in VS Code.
-- Prepare these four screens in order:
-  1. Terminal
-  2. VS Code, first with the generated project and then with the completed agent
-  3. Slack
-  4. Vercel Agent Runs
-
 ## Part 1: Scaffold and customize an agent (about 5 minutes)
 
 ### Create the project
