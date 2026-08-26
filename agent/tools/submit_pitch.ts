@@ -47,34 +47,6 @@ export default defineTool({
     }
 
     const auth = ctx.session.auth.current;
-    const submissionMode = process.env.PITCH_SUBMISSION_MODE ?? "slack";
-
-    if (submissionMode === "preview") {
-      if (
-        auth?.authenticator !== "local-dev" ||
-        auth.principalType !== "local-dev"
-      ) {
-        throw new Error(
-          "Pitch preview mode is only available through the local eve development server.",
-        );
-      }
-
-      return {
-        approved: true,
-        consultant: consultantRecord.name,
-        customer: opportunityRecord.customer,
-        mode: "local-preview",
-        pitch,
-        submitted: false,
-      };
-    }
-
-    if (submissionMode !== "slack") {
-      throw new Error(
-        `Unsupported PITCH_SUBMISSION_MODE: ${submissionMode}. Use "slack" or "preview".`,
-      );
-    }
-
     const slackUserId = auth?.attributes.user_id;
 
     if (

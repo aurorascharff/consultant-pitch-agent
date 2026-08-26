@@ -3,7 +3,7 @@
 **Length:** About 15 minutes  
 **Repository:** [aurorascharff/consultant-pitch-agent](https://github.com/aurorascharff/consultant-pitch-agent)
 
-The demo has two parts. Spend about five minutes scaffolding a small eve agent, inspecting the generated source while dependencies install, and changing its behavior through `instructions.md`. Use the remaining ten minutes for the completed consultant pitch agent, including visible tool calls, local approval preview, evals, Slack delivery, and Vercel Agent Runs.
+The demo has two parts. Spend about five minutes scaffolding a small eve agent, inspecting the generated source while dependencies install, and changing its behavior through `instructions.md`. Use the remaining ten minutes for the completed consultant pitch agent, including visible tool calls, the local approval and authorization boundary, evals, Slack delivery, and Vercel Agent Runs.
 
 All customers, consultants, projects, and results in the consultant demo are synthetic.
 
@@ -12,7 +12,6 @@ All customers, consultants, projects, and results in the consultant demo are syn
 - Confirm that the deployed agent responds in Slack.
 - Confirm that approval posts the unchanged pitch to `#submitted-pitches`.
 - Confirm that the deployed run appears under **Observability → Agent Runs**.
-- Add `PITCH_SUBMISSION_MODE=preview` to the completed repository's local environment so terminal approval can finish without posting to Slack.
 - Run `npm run eval` once and confirm that all four evals pass.
 - Make sure `/Users/aurorascharff/Documents/Fagfestivalen/my-agent` does not already exist.
 - Open the completed `consultant-pitch-agent` repository in VS Code.
@@ -180,7 +179,7 @@ Then show what the completed application adds:
 - `agent/tools/search_consultants.ts` finds candidates from the requested skills and industry.
 - `agent/tools/get_consultant_profile.ts` retrieves the approved facts for one consultant.
 - `agent/tools/search_case_studies.ts` finds company evidence that supports the pitch.
-- `agent/tools/submit_pitch.ts` is the side-effecting action. `approval: always()` makes approval a runtime gate rather than a sentence the model can ignore. Its local preview mode completes without posting, while Slack mode requires a Slack user.
+- `agent/tools/submit_pitch.ts` is the side-effecting action. `approval: always()` makes approval a runtime gate rather than a sentence the model can ignore. After approval, the tool still requires an authenticated Slack user before it posts.
 - `agent/skills/write-sales-pitch/SKILL.md` defines the task-specific procedure after the opportunity is known: search, select, gather one company case, and draft without attributing a company case study to an individual consultant.
 - `agent/channels/eve.ts` supplies the authenticated HTTP entry point used by the terminal and other clients.
 - `agent/channels/slack.ts` connects the same agent to Slack and renders the approval request in the conversation.
@@ -223,7 +222,7 @@ Say:
 - The final response names the evidence it used, so the person reviewing it can trace the recommendation.
 - This is the same user prompt as the scaffold. The difference is the application context and capabilities around the model, which are visible as tool calls.
 
-### Approve the local preview
+### Show approval and authorization locally
 
 When the final pitch is ready, reply:
 
@@ -237,14 +236,14 @@ Say:
 
 - The model proposed a side effect, but it has not executed yet. `approval: always()` parks the durable workflow before the tool body runs.
 - We can inspect the exact opportunity, consultant, and pitch arguments before approving. This is a runtime guarantee, not just agent behavior written in a prompt.
-- The terminal entered through `eve dev`, so eve attached a `local-dev` identity. With `PITCH_SUBMISSION_MODE=preview`, approval completes the call locally and returns `submitted: false`; it cannot post to Slack or masquerade as a Slack user.
+- The terminal entered through `eve dev`, so eve attached a `local-dev` identity rather than a Slack user.
 
-Choose **Approve** and show the local preview result.
+Choose **Approve**. The tool then rejects the call with `Only an authenticated Slack user can submit a pitch.`
 
 Say:
 
-- Approval and authorization solve different problems. Approval confirms this exact action. Authorization determines which caller is allowed to produce the real side effect.
-- The local path is deliberately a preview. In Slack mode, the same tool requires the authenticated Slack user supplied by the channel.
+- This failure is expected. Approval confirms this exact action; it does not give the local caller a Slack identity.
+- Authorization is checked inside the tool after approval. The same action succeeds from Slack only when the channel supplies an authenticated Slack user.
 
 ### Run the evals
 
@@ -260,24 +259,17 @@ As the four evals complete:
 - Show the gates for the opportunity, consultant search, selected profile, case study, Norwegian opening, unsupported consultant behavior, and pending approval.
 - Explain that the evals are the repeatable version of the checks we just made by eye in the terminal.
 
-### Bridge from local testing to deployment
+### Bridge from local testing to the pre-deployed agent
 
 [Return to the terminal before opening Slack.]
 
 Say:
 
-- We have now tried the real agent locally, inspected its tool calls and approval boundary, and turned the important behavior into repeatable evals. To use the same agent from Slack, it needs a public production runtime.
-- I am going to deploy it with `eve deploy`. I am choosing Vercel because eve can connect the application to the managed services we discussed earlier: the web runtime, Vercel Workflow for durable runs and approval pauses, Vercel Cron for authored schedules, Vercel Sandbox when the agent needs isolated code execution, project identity for AI Gateway, and deployment observability through Agent Runs.
+- We have now tried the real agent locally, inspected its tool calls and approval boundary, and turned the important behavior into repeatable evals. To use the same agent from Slack, it would need a public production runtime.
+- From here I could run `eve deploy`. I would choose Vercel because eve connects the application to the managed services we discussed earlier: the web runtime, Vercel Workflow for durable runs and approval pauses, Vercel Cron for schedules, Vercel Sandbox for isolated code execution, project identity for AI Gateway, and Agent Runs for observability.
 - Vercel is the managed path, not a requirement for the agent source. Eve can also build a standard Nitro Node server with `eve build` and run it with `eve start` on a Node or container platform.
-- On another host, we would operate the surrounding pieces ourselves: persistent Workflow storage, a Docker, microsandbox, or custom sandbox backend, production authentication and secrets, ingress for both `/eve/` and `/.well-known/workflow/`, scheduling, TLS, scaling, restarts, logs, and OpenTelemetry. The same filesystem-based agent configuration remains portable; Vercel means I do not have to assemble and operate those pieces for this demo.
-
-Run:
-
-```bash
-npm run deploy
-```
-
-If the production deployment is already prepared for the talk, explain what the command does and switch to the deployed Slack agent instead of waiting for a new build.
+- On another host, we would operate the surrounding pieces ourselves: persistent Workflow storage, a sandbox backend, authentication and secrets, ingress for `/eve/` and `/.well-known/workflow/`, scheduling, TLS, scaling, restarts, logs, and OpenTelemetry.
+- I will not deploy live. I already have the same repository running in Slack, so we can move straight to the production interaction.
 
 Source notes:
 
@@ -287,7 +279,7 @@ Source notes:
 
 Then switch to Slack.
 
-### Run the deployed agent in Slack
+### Run the pre-deployed agent in Slack
 
 [Open a clean Slack thread with `@KonsuBot`.]
 
@@ -304,7 +296,7 @@ Send:
 
 While the agent works:
 
-- Explain that the deployed run follows the same source chain as the local run.
+- Explain that the pre-deployed run follows the same source chain as the local run.
 - Point out the recommendation, the reason for choosing the consultant, the final pitch, and the evidence records.
 - If you want to show conversational state, request one small change in the same thread:
 
@@ -324,7 +316,7 @@ Say:
 
 - That sentence does not submit the pitch by itself. It tells the agent to call the protected `submit_pitch` tool.
 - The tool pauses the durable workflow and renders the exact final text in an approval card.
-- Unlike the local preview, the Slack channel attaches the real Slack user to the resumed turn. The tool rechecks that identity before it posts anything.
+- Unlike the local terminal, the Slack channel attaches the real Slack user to the resumed turn. The tool rechecks that identity before it posts anything.
 - Approval still lets the person inspect and confirm this specific pitch. Authentication does not replace approval, and approval does not create an identity.
 
 Review the approval card, then click **Godkjenn**.

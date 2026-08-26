@@ -15,13 +15,7 @@ npm install
 npm run dev
 ```
 
-To exercise the native approval flow in the terminal without posting to Slack, also set:
-
-```bash
-PITCH_SUBMISSION_MODE=preview
-```
-
-In preview mode, an approved `submit_pitch` call returns the exact pitch with `submitted: false`. Preview mode is accepted only through `eve dev`. When the variable is absent, submission defaults to Slack and requires an authenticated Slack user.
+The `submit_pitch` tool always requires an authenticated Slack user. You can inspect and approve its proposed call in `eve dev`, but execution then fails at the authorization check because the local terminal is not Slack. This keeps local development from simulating a production identity.
 
 ## Try different opportunities
 
