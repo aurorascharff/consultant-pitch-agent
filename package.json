@@ -10,7 +10,7 @@
     "build": "eve build",
     "deploy": "eve deploy",
     "dev": "WORKFLOW_LOCAL_BODY_TIMEOUT_MS=180000 WORKFLOW_LOCAL_HEADERS_TIMEOUT_MS=180000 NODE_OPTIONS=--disable-warning=MaxListenersExceededWarning eve dev",
-    "eval": "WORKFLOW_LOCAL_BODY_TIMEOUT_MS=180000 WORKFLOW_LOCAL_HEADERS_TIMEOUT_MS=180000 NODE_OPTIONS=--disable-warning=MaxListenersExceededWarning eve eval",
+    "eval": "node eval.mjs",
     "start": "eve start",
     "typecheck": "tsc"
   },
