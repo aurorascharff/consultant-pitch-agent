@@ -1,4 +1,6 @@
 import { spawn } from "node:child_process";
+import { mkdir, readFile, readdir, rename } from "node:fs/promises";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const args = process.argv.slice(2);
@@ -19,11 +21,52 @@ async function isReachable(url) {
   }
 }
 
+async function quarantineStaleWorkflowState() {
+  const eveDir = fileURLToPath(new URL("./.eve/", import.meta.url));
+  const workflowDir = path.join(eveDir, ".workflow-data");
+  const runsDir = path.join(workflowDir, "runs");
+  const snapshotsDir = path.join(eveDir, "dev-runtime", "snapshots");
+
+  try {
+    const [runFiles, snapshots] = await Promise.all([
+      readdir(runsDir),
+      readdir(snapshotsDir).catch(() => []),
+    ]);
+    const snapshotSet = new Set(snapshots);
+    const runs = await Promise.all(
+      runFiles
+        .filter((file) => file.endsWith(".json"))
+        .map(async (file) =>
+          JSON.parse(await readFile(path.join(runsDir, file), "utf8")),
+        ),
+    );
+    const hasStaleActiveRun = runs.some(
+      (run) =>
+        run.status === "running" &&
+        typeof run.deploymentId === "string" &&
+        !snapshotSet.has(run.deploymentId),
+    );
+
+    if (!hasStaleActiveRun) return;
+
+    const quarantineDir = path.join(eveDir, "workflow-quarantine");
+    const timestamp = new Date().toISOString().replaceAll(":", "-");
+    await mkdir(quarantineDir, { recursive: true });
+    await rename(workflowDir, path.join(quarantineDir, timestamp));
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  }
+}
+
 const eveArgs = ["eval", ...args];
 
-if (!hasExplicitUrl && !args.includes("--list") && (await isReachable(localUrl))) {
-  console.log(`Using the running eve server at ${localUrl}`);
-  eveArgs.push("--url", localUrl);
+if (!hasExplicitUrl && !args.includes("--list")) {
+  if (await isReachable(localUrl)) {
+    console.log(`Using the running eve server at ${localUrl}`);
+    eveArgs.push("--url", localUrl);
+  } else {
+    await quarantineStaleWorkflowState();
+  }
 }
 
 const eveBin = fileURLToPath(
