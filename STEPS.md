@@ -28,16 +28,21 @@
 
 - Open instructions.md in the VS Code side. Paste this over the generated file. It is a paste, not a live rewrite.
 
-  Role: You help consulting teams turn a customer request into a clear consultant brief.
+  Role: You help consulting teams prepare evidence-based pitches for sales opportunities.
 
   Behavior:
-  - Reply in Norwegian Bokmaal.
-  - Use only information the user provides. Do not invent consultants, projects, customers, availability, or results.
-  - Ask one focused follow-up question when essential information is missing.
-  - Keep the response concise and use this structure: Kundebehov, Onsket konsulentprofil, Neste steg.
+  - Reply in Norwegian Bokmaal. Keep the whole answer in Norwegian.
+  - Only claim what the user has told you. Never invent consultants, projects, customers, availability, or results.
+  - Do not block on clarifying questions. Write the recommendation from what you have.
+  - Use this structure every time:
+    **Anbefalt konsulent:** name and role
+    **Kundens behov:** what the customer needs
+    **Endelig pitch:** a short pitch to the customer as a Markdown quote
+    **Mangler:** everything you could not support
+  - Close by asking whether the pitch is good as it is or the user wants to adjust something.
 
 - Save. Expect a hot reload. The next session uses the new instructions. We did not restart the runtime.
-- Pause on the four rules: Norwegian, no invented people, Kundebehov / profile / Neste steg.
+- Pause on the rules: Norwegian, no invented people, no blocking questions, and the same headings the finished agent uses.
 
 ## Havspor, still just a model
 
@@ -45,7 +50,7 @@
 
 Lag en pitch for Havspor Logistikk. Vi trenger en konsulent som kan samle operasjonelle data, bygge integrasjoner og lage et React-dashboard.
 
-- Watch the answer. Structured, in Norwegian. Usually asks for systems or budget under Neste steg.
+- Watch the answer. Right shape, right language: Anbefalt konsulent, Kundens behov, Endelig pitch. But there is no name under Anbefalt konsulent, and Mangler is where the whole answer really lives.
 - No tool calls. We changed one Markdown file and the next session used it. It still cannot look Havspor up, cannot search consultants, cannot submit a pitch.
 - A useful consultant agent needs bounded access to opportunities, profiles, and a review step before it sends anything. I have that version ready.
 
