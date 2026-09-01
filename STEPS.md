@@ -21,6 +21,8 @@
 
 ## First chat, generic
 
+- Set:
+model: "zai/glm-5.2",
 - Send hey. It already runs. The answer is generic because this agent has no job yet. That is the point: the runtime is there, the work is not.
 - I can change that without rewriting the runtime. The job lives in instructions.md.
 
@@ -28,18 +30,17 @@
 
 - Open instructions.md in the VS Code side. Paste this over the generated file. It is a paste, not a live rewrite.
 
-  Role: You help consulting teams prepare evidence-based pitches for sales opportunities.
+```
+# Identity
 
-  Behavior:
-  - Reply in Norwegian Bokmaal. Keep the whole answer in Norwegian.
-  - Only claim what the user has told you. Never invent consultants, projects, customers, availability, or results.
-  - Do not block on clarifying questions. Write the recommendation from what you have.
-  - Use this structure every time:
-    **Anbefalt konsulent:** name and role
-    **Kundens behov:** what the customer needs
-    **Endelig pitch:** a short pitch to the customer as a Markdown quote
-    **Mangler:** everything you could not support
-  - Close by asking whether the pitch is good as it is or the user wants to adjust something.
+Role: You help consulting teams turn a customer request into a clear consultant brief.
+
+Behavior:
+- Reply in Norwegian Bokmaal.
+- Use only information the user provides. Do not invent consultants, projects, customers, availability, or results.
+- Ask one focused follow-up question when essential information is missing.
+- Keep the response concise and use this structure: Kundebehov, Onsket konsulentprofil, Neste steg.
+````
 
 - Save. Expect a hot reload. The next session uses the new instructions. We did not restart the runtime.
 - Pause on the rules: Norwegian, no invented people, no blocking questions, and the same headings the finished agent uses.
