@@ -36,9 +36,11 @@ Hello.
 - Move to the right terminal and start FX. Leave eve dev running beside it.
 - I sometimes use Codex for this kind of work too. For this demo I want the entire coding flow to stay visible inside the repository and its VS Code terminal, so I am using FX.
 - FX is the coding agent I am going to use to change this application. We just launched it from Vercel Labs. It is open source, model-agnostic, and designed to feel more like a small Unix tool than a heavy terminal interface.
-- FX is also using Vercel AI Gateway. That gives me the same catalog of models here in the coding agent, and I can switch models without changing the workflow or moving to another tool.
-- Open `/models` and switch to Claude Opus. Turn on `/fast` if it is not already enabled, then use `/status` to show the active model.
-- This is the practical benefit of the Gateway: I can choose the model that fits the task from inside FX and keep working in the same interface.
+- FX is using Vercel AI Gateway. The Gateway gives me one interface and one model catalog across providers, so I can try different models without changing tools or writing a new integration for each provider.
+- If you have used OpenRouter, it solves a similar model-access problem. This demo is using Vercel AI Gateway, which is integrated with the same Vercel project, billing, and observability. FX can also connect to OpenRouter separately, but that is not what I am using here.
+- Open `/models` and search for `qwen`. Point out that the catalog includes open model families such as Qwen alongside models from Anthropic, OpenAI, xAI, and others.
+- Select Claude Opus for this coding task, toggle `/fast`, and run `/status` to confirm the active model.
+- That is the practical benefit: I can inspect the available models, choose the one that fits this task, and continue in the same FX conversation.
 - I normally use Wispr Flow for this. It lets me dictate anywhere I can type, so the same voice-prompting workflow works whether I am using Codex, FX, or another coding interface.
 - Today I am using Wispr Flow to voice-prompt FX. I am going to add one capability at a time and inspect the code it writes.
 - Say this:
