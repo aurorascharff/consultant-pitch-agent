@@ -10,6 +10,7 @@
 - This is intentionally close to the starter. I ran `npx eve@latest init consultant-pitch-agent`, connected the local Eve and Slack channels, and added synthetic opportunities, consultant profiles, and case studies. That is about it; none of the agentic behavior has been built yet.
 - This application uses eve, Vercel's open-source agent framework. Eve is the harness around the model. It gives me the filesystem structure, durable sessions, tools, skills, channels, approvals, and evals that turn a model into an application.
 - An eve agent is just a directory. The instructions and workflows are Markdown. The tools are TypeScript. I can see the complete application in the editor and change it as code.
+- Eve compiles those files into the agent runtime. Locally, `eve dev` gives me a conversation interface and watches the directory, so when FX changes a file, Eve rebuilds the agent and I can test it immediately.
 - Open agent/agent.ts. The provider and model are one string. This agent makes that model call through Vercel AI Gateway.
 - AI Gateway gives me one API for more than 200 models from different providers, with shared billing and observability. I can change that string without rewriting the agent or managing a separate integration for every provider.
 - That separation matters. Eve controls how the agent behaves. AI Gateway lets me choose which model powers it.
@@ -118,6 +119,8 @@ pnpm eval
 
 - So why am I showing you Slack? So far I have been building and testing the agent locally in eve dev, but an agent becomes much more useful when you connect it to where people already work.
 - I do not have time to deploy and configure Slack live, so I prepared that version in advance. It is the same agent, deployed and connected through Eve's Slack channel, and this is what the experience looks like for the team using it.
+- Here is how the pieces connect in production. Vercel hosts the agent and its Slack webhook. Eve's Slack channel turns each Slack thread into the same kind of durable agent session I used locally, then delivers the response back to Slack.
+- The model calls still go through Vercel AI Gateway. Vercel Workflow keeps the run durable, including while it is paused for approval, and I can inspect the complete run and its tool calls in Agent Runs under Vercel Observability.
 - Switch to the deployed agent in Slack. Do not deploy during the demo; this version is already open and ready.
 - Mention PitchBot in a thread with the same request:
 
