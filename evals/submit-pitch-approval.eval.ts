@@ -5,7 +5,7 @@ export default defineEval({
   timeoutMs: 120_000,
   async test(t) {
     await t.send(
-      "We are responding to the Nordlys Energi opportunity. Use Amalie Berg and write a short pitch.",
+      "We are responding to the Northstar Energy opportunity. Use Amelia Brooks and write a short pitch.",
     );
     const approvalTurn = await t.send(
       "This looks good. I am happy with the pitch.",

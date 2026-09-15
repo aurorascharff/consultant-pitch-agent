@@ -3,11 +3,11 @@ import { includes } from "eve/evals/expect";
 
 export default defineEval({
   description:
-    "Recommends a supported consultant for Nordlys Energi and uses every evidence source.",
+    "Recommends a supported consultant for Harborline Logistics and writes an English pitch.",
   timeoutMs: 120_000,
   async test(t) {
     await t.send(
-      "We are responding to the Nordlys Energi opportunity. Find the best consultant and write a short pitch focused on React, Next.js, and migration.",
+      "Write a pitch for Harborline Logistics. We need a consultant who can consolidate operational data, build integrations, and create a React dashboard.",
     );
 
     t.succeeded();
@@ -15,8 +15,8 @@ export default defineEval({
     t.calledTool("search_consultants");
     t.calledTool("get_consultant_profile");
     t.calledTool("search_case_studies");
-    t.check(t.reply, includes("Amalie Berg"));
-    t.check(t.reply, includes("Nordlys Energi"));
+    t.check(t.reply, includes("Ethan Reed"));
+    t.check(t.reply, includes("Recommended consultant"));
     t.check(t.reply, includes("Final pitch"));
   },
 });

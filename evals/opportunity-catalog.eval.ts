@@ -10,7 +10,7 @@ export default defineEval({
     t.succeeded();
     t.calledTool("list_opportunities");
     t.notCalledTool("search_consultants");
-    t.check(t.reply, includes("Nordlys Energi"));
-    t.check(t.reply, includes("Havspor Logistikk"));
+    t.check(t.reply, includes("Northstar Energy"));
+    t.check(t.reply, includes("Harborline Logistics"));
   },
 });

@@ -34,35 +34,35 @@ Which sales opportunities are available?
 Compare candidates:
 
 ```text
-Compare Amalie Berg and Erik Lund for Nordlys Energi. Show the trade-offs but do not write a pitch.
+Compare Amelia Brooks and Ethan Reed for Northstar Energy. Show the trade-offs but do not write a pitch.
 ```
 
 ## Try different opportunities
 
 Each synthetic opportunity emphasizes a different kind of consulting work and should surface a different profile.
 
-**Portal migration and Next.js (Amalie Berg)**
+**Portal migration and Next.js (Amelia Brooks)**
 
 ```text
-We are responding to the Nordlys Energi opportunity. Find the best consultant and write a short pitch focused on React, Next.js, and migration.
+We are responding to the Northstar Energy opportunity. Find the best consultant and write a short pitch focused on React, Next.js, and migration.
 ```
 
-**APIs and a logistics data platform (Erik Lund)**
+**APIs and a logistics data platform (Ethan Reed)**
 
 ```text
-Write an email pitch for Havspor Logistikk. We need a consultant who can consolidate operational data, build integrations, and create a React dashboard.
+Write an email pitch for Harborline Logistics. We need a consultant who can consolidate operational data, build integrations, and create a React dashboard.
 ```
 
-**Accessibility and healthcare forms (Sara Nilsen)**
+**Accessibility and healthcare forms (Sophie Carter)**
 
 ```text
-Find the best consultant for Solsiden Helse and write an executive pitch focused on accessibility, user research, and a design system that several teams can use.
+Find the best consultant for Greenfield Health and write an executive pitch focused on accessibility, user research, and a design system that several teams can use.
 ```
 
-**Cloud modernization and technical leadership (Jonas Mo)**
+**Cloud modernization and technical leadership (James Morgan)**
 
 ```text
-Write a pitch for Nordnett Telekom. They need engineering leadership, a target architecture, and a staged cloud-migration plan across eight teams.
+Write a pitch for ConnectOne Telecom. They need engineering leadership, a target architecture, and a staged cloud-migration plan across eight teams.
 ```
 
 ## Verify the agent

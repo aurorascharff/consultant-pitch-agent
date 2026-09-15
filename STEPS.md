@@ -45,19 +45,19 @@ Behavior:
 - Save. Expect a hot reload. The next session uses the new instructions. We did not restart the runtime.
 - Pause on the rules: English, no invented people, one focused question when required, and a consistent response structure.
 
-## Havspor, still just a model
+## Harborline, still just a model
 
 - Send this:
 
-Write a pitch for Havspor Logistikk. We need a consultant who can consolidate operational data, build integrations, and create a React dashboard.
+Write a pitch for Harborline Logistics. We need a consultant who can consolidate operational data, build integrations, and create a React dashboard.
 
 - Watch the answer. Right shape and language: Recommended consultant, Customer need, Final pitch. But there is no name under Recommended consultant, and Gaps is where the whole answer really lives.
-- No tool calls. We changed one Markdown file and the next session used it. It still cannot look Havspor up, cannot search consultants, cannot submit a pitch.
+- No tool calls. We changed one Markdown file and the next session used it. It still cannot look Harborline up, cannot search consultants, or submit a pitch.
 - A useful consultant agent needs bounded access to opportunities, profiles, and a review step before it sends anything. I have that version ready.
 
 ## Completed agent: instructions first
 
-- (Switch to the second screen: VS Code on the finished app, consultant-pitch-agent, folders open.) Same filesystem. Same Havspor prompt. Now it can retrieve, search, and submit.
+- (Switch to the second screen: VS Code on the finished app, consultant-pitch-agent, folders open.) Same filesystem. Same Harborline prompt. Now it can retrieve, search, and submit.
 - Imagine a consulting company with an incoming opportunity. The information is spread across CRM, profiles, resource planning, case studies. The agent should gather that, recommend someone, draft a pitch. It must not invent experience or send without a person reviewing.
 - Open instructions.md first. This is where the job is. This is also where we detail the tools we added.
 - Walk the standing rules while you are in the file: get_opportunity before drafting. Search consultants. Load the pitch skill. Only claim what the tools returned. English. Draft first, label it Final pitch. When they say it looks good, call submit_pitch. Never say it was submitted unless the tool returns submitted true. If the caller is local, say that submission needs an authenticated Slack user.
@@ -73,10 +73,10 @@ Write a pitch for Havspor Logistikk. We need a consultant who can consolidate op
 
 ## Run it
 
-- The completed agent is already running. Same Havspor prompt.
+- The completed agent is already running. Same Harborline prompt.
 - Watch the tool calls. First get_opportunity. Fetching the customer before it writes.
 - Then search_consultants. Not picking a name from training data.
-- Then the profile, then one company case. Erik Lund is in the pitch because he is in the search result. One logistics case, not a stack of extra names.
+- Then the profile, then one company case. Ethan Reed is in the pitch because he is in the search result. One logistics case, not a stack of extra names.
 - Final pitch contains the exact customer-ready text. That is the record, not the model inventing a close.
 - Same prompt as the scaffold. The difference is the application around the model, which you can see as tool calls.
 
@@ -98,7 +98,7 @@ This looks good.
 ## Slack
 
 - (Third screen: deployed app in one tab, Slack in the other.) Same agent, now from Slack.
-- Mention KonsuBot in a thread with the same Havspor prompt.
+- Mention PitchBot in a thread with the same Harborline prompt.
 - Same retrieve, same search, same Final pitch.
 - This looks good. Watch for Approve. Click it.
 - See it appear in Slack. submitted-pitches has the same text. The run resumed after approval; it did not post twice.

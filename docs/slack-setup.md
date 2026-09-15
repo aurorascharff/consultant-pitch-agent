@@ -49,7 +49,7 @@ Invite the bot to the channel where you want to start requests.
 Mention the bot:
 
 ```text
-@KonsuBot We are responding to the Nordlys Energi opportunity. Find the best consultant and write a short pitch focused on React, Next.js, and migration.
+@pitchBot We are responding to the Northstar Energy opportunity. Find the best consultant and write a short pitch focused on React, Next.js, and migration.
 ```
 
 After the agent drafts the final pitch, reply in the same thread:

@@ -40,8 +40,8 @@ export type CaseStudy = {
 
 export const opportunities: Opportunity[] = [
   {
-    id: "nordlys-energy",
-    customer: "Nordlys Energi",
+    id: "northstar-energy",
+    customer: "Northstar Energy",
     industry: "Energy",
     summary: "Modernize an aging customer portal without disrupting service.",
     needs: [
@@ -58,8 +58,8 @@ export const opportunities: Opportunity[] = [
       "A faster, accessible portal that can be released incrementally and owned by the internal team.",
   },
   {
-    id: "havspor-logistics",
-    customer: "Havspor Logistikk",
+    id: "harborline-logistics",
+    customer: "Harborline Logistics",
     industry: "Logistics",
     summary:
       "Replace fragmented operational reporting with a shared logistics data platform.",
@@ -77,8 +77,8 @@ export const opportunities: Opportunity[] = [
       "A real-time operations view backed by maintainable APIs and a scalable data platform.",
   },
   {
-    id: "solsiden-health",
-    customer: "Solsiden Helse",
+    id: "greenfield-health",
+    customer: "Greenfield Health",
     industry: "Healthcare",
     summary:
       "Create accessible digital intake services with consistent interaction patterns.",
@@ -96,8 +96,8 @@ export const opportunities: Opportunity[] = [
       "Accessible healthcare forms that more patients complete and product teams can maintain consistently.",
   },
   {
-    id: "nordnett-telecom",
-    customer: "Nordnett Telekom",
+    id: "connectone-telecom",
+    customer: "ConnectOne Telecom",
     industry: "Telecommunications",
     summary:
       "Define the technical direction and delivery model for a cloud modernization program.",
@@ -118,10 +118,10 @@ export const opportunities: Opportunity[] = [
 
 export const consultants: Consultant[] = [
   {
-    id: "amalie-berg",
-    name: "Amalie Berg",
+    id: "amelia-brooks",
+    name: "Amelia Brooks",
     role: "Principal Frontend Consultant",
-    location: "Oslo",
+    location: "London",
     availability: "Available for a new engagement from October",
     skills: [
       "React",
@@ -138,7 +138,7 @@ export const consultants: Consultant[] = [
     projects: [
       {
         title: "Self-service portal migration",
-        customer: "Boreal Forsikring",
+        customer: "Boreal Insurance",
         summary:
           "Led a route-by-route migration from a legacy React SPA to Next.js while the existing portal remained in production.",
         outcomes: [
@@ -150,7 +150,7 @@ export const consultants: Consultant[] = [
       },
       {
         title: "Accessible design system rollout",
-        customer: "Nordhavn Kommune",
+        customer: "Northbridge Council",
         summary:
           "Created accessible React foundations and adoption guidance for six public services.",
         outcomes: [
@@ -161,10 +161,10 @@ export const consultants: Consultant[] = [
     ],
   },
   {
-    id: "erik-lund",
-    name: "Erik Lund",
+    id: "ethan-reed",
+    name: "Ethan Reed",
     role: "Senior Full-stack Consultant",
-    location: "Trondheim",
+    location: "Manchester",
     availability: "Available at 50% from September",
     skills: [
       "React",
@@ -180,7 +180,7 @@ export const consultants: Consultant[] = [
     projects: [
       {
         title: "Energy insights platform",
-        customer: "Nordvind Analyse",
+        customer: "Northwind Analytics",
         summary:
           "Built a cloud data platform and React dashboard for operational energy data.",
         outcomes: [
@@ -191,10 +191,10 @@ export const consultants: Consultant[] = [
     ],
   },
   {
-    id: "sara-nilsen",
-    name: "Sara Nilsen",
+    id: "sophie-carter",
+    name: "Sophie Carter",
     role: "Senior UX Engineer",
-    location: "Bergen",
+    location: "Bristol",
     availability: "Available from September",
     skills: [
       "React",
@@ -209,7 +209,7 @@ export const consultants: Consultant[] = [
     projects: [
       {
         title: "Accessible citizen services",
-        customer: "Vestland Digital",
+        customer: "Westbridge Digital",
         summary:
           "Redesigned and implemented high-traffic public forms with a shared React design system.",
         outcomes: [
@@ -220,10 +220,10 @@ export const consultants: Consultant[] = [
     ],
   },
   {
-    id: "jonas-mo",
-    name: "Jonas Mo",
+    id: "james-morgan",
+    name: "James Morgan",
     role: "Engineering Lead",
-    location: "Oslo",
+    location: "London",
     availability: "Available for advisory work from November",
     skills: [
       "Engineering leadership",
@@ -238,7 +238,7 @@ export const consultants: Consultant[] = [
     projects: [
       {
         title: "Platform modernization program",
-        customer: "Polarnett",
+        customer: "PolarNet",
         summary:
           "Defined the technical roadmap and delivery model for a multi-year cloud migration.",
         outcomes: [
@@ -254,7 +254,7 @@ export const caseStudies: CaseStudy[] = [
   {
     id: "boreal-portal-modernization",
     title: "Modernizing a customer portal without a rewrite",
-    customer: "Boreal Forsikring",
+    customer: "Boreal Insurance",
     industry: "Insurance",
     topics: [
       "React",
@@ -279,9 +279,9 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    id: "fjordlys-self-service",
+    id: "brightshore-self-service",
     title: "A faster self-service experience for an energy provider",
-    customer: "Fjordlys Energi",
+    customer: "Brightshore Energy",
     industry: "Energy",
     topics: [
       "React",
@@ -302,9 +302,9 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    id: "nordhavn-design-system",
+    id: "northbridge-design-system",
     title: "Scaling accessible services with a shared design system",
-    customer: "Nordhavn Kommune",
+    customer: "Northbridge Council",
     industry: "Public sector",
     topics: ["React", "Accessibility", "Design systems", "Knowledge transfer"],
     challenge:
@@ -320,9 +320,9 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    id: "kystfrakt-control-tower",
+    id: "coastline-control-tower",
     title: "A real-time control tower for logistics operations",
-    customer: "Kystfrakt",
+    customer: "Coastline Freight",
     industry: "Logistics",
     topics: [
       "React",
@@ -344,9 +344,9 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    id: "fjordhelse-intake",
+    id: "harbor-health-intake",
     title: "Accessible digital intake across healthcare services",
-    customer: "Fjordhelse",
+    customer: "Harbor Health",
     industry: "Healthcare",
     topics: [
       "React",
@@ -368,9 +368,9 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    id: "telefjord-modernization",
+    id: "telebridge-modernization",
     title: "A shared operating model for telecom modernization",
-    customer: "Telefjord",
+    customer: "Telebridge",
     industry: "Telecommunications",
     topics: [
       "Engineering leadership",
