@@ -1,5 +1,11 @@
 # FIVE-MINUTE DEMO STEPS
 
+## Introduce Eve
+
+- Open [eve.dev](https://eve.dev). Say: "I am building this with Eve, Vercel's open-source framework for building agents. We use it internally to build agents that manage work and carry out tasks."
+- "It brings together the AI SDK, AI Gateway, and Vercel Workflow, and lets you define an agent with simple files for its instructions, tools, and skills."
+- "I want to show you how to use it, but more importantly, I want to show you how I actually code with it."
+
 ## Set up the split view
 
 - (The project is already open in VS Code.) Keep the editor visible and split the integrated terminal into two panes.
@@ -7,13 +13,9 @@
 - The audience should be able to see the agent running, the coding agent working, and the files changing without switching windows.
 - What I want to show is not only the finished agent. I want to show how I actually build one.
 - The important work is not typing the most code. It is making one change, testing it, seeing whether it behaves the way I intended, and assessing the quality of the result. I am going to repeat that loop throughout the demo.
-- This is intentionally close to the starter. I ran `npx eve@latest init consultant-pitch-agent`, connected the local Eve and Slack channels, and added synthetic opportunities, consultant profiles, and case studies. That is about it; none of the agentic behavior has been built yet.
-- This application uses eve, Vercel's open-source agent framework. Eve is the harness around the model. It gives me the filesystem structure, durable sessions, tools, skills, channels, approvals, and evals that turn a model into an application.
-- An eve agent is just a directory. The instructions and workflows are Markdown. The tools are TypeScript. I can see the complete application in the editor and change it as code.
+- This project is intentionally close to that starter. I connected the local Eve and Slack channels and added synthetic opportunities, consultant profiles, and case studies. That is about it; none of the agentic behavior has been built yet.
 - Eve compiles those files into the agent runtime. Locally, `eve dev` gives me a conversation interface and watches the directory, so when FX changes a file, Eve rebuilds the agent and I can test it immediately.
-- Open agent/agent.ts. The provider and model are one string. This agent makes that model call through Vercel AI Gateway.
-- AI Gateway gives me one API for more than 200 models from different providers, with shared billing and observability. I can change that string without rewriting the agent or managing a separate integration for every provider.
-- That separation matters. Eve controls how the agent behaves. AI Gateway lets me choose which model powers it.
+- Open agent/agent.ts. The provider and model are one string, and the model call goes through Vercel AI Gateway. Eve controls how the agent behaves; AI Gateway lets me choose which model powers it.
 - Open agent/instructions.md. At the start, this is still a generic English-language assistant. It has not been told that its job is to write consultant pitches.
 - Open agent/lib/data.ts briefly. The customer opportunities, consultant profiles, and case studies exist in the application.
 - The important part is that the model has not been given a job and cannot use that data yet. There are no tools and no skills.
@@ -119,8 +121,7 @@ pnpm eval
 
 - So why am I showing you Slack? So far I have been building and testing the agent locally in eve dev, but an agent becomes much more useful when you connect it to where people already work.
 - I do not have time to deploy and configure Slack live, so I prepared that version in advance. It is the same agent, deployed and connected through Eve's Slack channel, and this is what the experience looks like for the team using it.
-- Here is how the pieces connect in production. Vercel hosts the agent and its Slack webhook. Eve's Slack channel turns each Slack thread into the same kind of durable agent session I used locally, then delivers the response back to Slack.
-- The model calls still go through Vercel AI Gateway. Vercel Workflow keeps the run durable, including while it is paused for approval, and I can inspect the complete run and its tool calls in Agent Runs under Vercel Observability.
+- This is the deployed version of the stack we just saw on eve.dev: Vercel hosts the agent, AI Gateway routes the model calls, Vercel Workflow keeps the session durable while it waits for approval, and Eve's channel maps the Slack thread to that session. I can inspect the complete run in Agent Runs under Vercel Observability.
 - Switch to the deployed agent in Slack. Do not deploy during the demo; this version is already open and ready.
 - Mention PitchBot in a thread with the same request:
 
