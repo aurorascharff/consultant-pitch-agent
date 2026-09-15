@@ -6,6 +6,7 @@
 - Run eve dev in the left terminal. Keep the right terminal ready for FX.
 - The audience should be able to see the agent running, the coding agent working, and the files changing without switching windows.
 - What I want to show is not only the finished agent. I want to show how I actually build one.
+- The important work is not typing the most code. It is making one change, testing it, seeing whether it behaves the way I intended, and assessing the quality of the result. I am going to repeat that loop throughout the demo.
 - This is intentionally close to the starter. I ran `npx eve@latest init consultant-pitch-agent`, connected the local Eve and Slack channels, and added synthetic opportunities, consultant profiles, and case studies. That is about it; none of the agentic behavior has been built yet.
 - This application uses eve, Vercel's open-source agent framework. Eve is the harness around the model. It gives me the filesystem structure, durable sessions, tools, skills, channels, approvals, and evals that turn a model into an application.
 - An eve agent is just a directory. The instructions and workflows are Markdown. The tools are TypeScript. I can see the complete application in the editor and change it as code.
@@ -91,6 +92,7 @@ Write a short pitch for Harborline Logistics and recommend the best consultant f
 
 - Watch the tool calls. First the opportunity. Then consultant search. Then the full profile. Then one company case study.
 - Ethan Reed is now in the pitch because he is in the application data, not because the model invented a plausible person.
+- Do not stop at seeing that the tools ran. Read enough of the result to assess whether it chose the right evidence and turned that evidence into a useful pitch. A technically successful run can still produce a weak result.
 - Open one generated tool and the skill in VS Code. The audience can see that the behavior is source code.
 - Same model. Same user request. The difference is the application around it.
 
@@ -109,9 +111,13 @@ pnpm eval
 
 - Let it finish. Point at the pass, not at the raw event output.
 - The first conversation showed that the agent can do the job. The eval makes that behavior repeatable and testable.
+- The eval protects the facts and workflow I can state deterministically. It does not replace judgment about whether the pitch is actually good.
+- In a real project, I would review that quality with the people I am building for. Here that might be the consulting or sales team; in another product it would be a different domain expert.
 
 ## Show it in Slack
 
+- So why am I showing you Slack? So far I have been building and testing the agent locally in eve dev, but an agent becomes much more useful when you connect it to where people already work.
+- I do not have time to deploy and configure Slack live, so I prepared that version in advance. It is the same agent, deployed and connected through Eve's Slack channel, and this is what the experience looks like for the team using it.
 - Switch to the deployed agent in Slack. Do not deploy during the demo; this version is already open and ready.
 - Mention PitchBot in a thread with the same request:
 
@@ -130,4 +136,5 @@ This looks good.
 ## Close
 
 - We started with a generic bot and some application data. First we gave the bot a job, then we gave it controlled access to the data.
-- We added one bounded capability at a time, composed those capabilities into a workflow, watched the tool calls, turned the expected behavior into an executable test, and then ran the same agent through Slack with human approval.
+- We added one bounded capability at a time, tested every change, inspected what the agent actually did, judged the quality of the result, turned the deterministic expectations into an executable eval, and then ran the same agent through Slack with human approval.
+- That loop is most of the work: build, run, inspect, evaluate, and improve. The code generation is only one part of making the agent good.
