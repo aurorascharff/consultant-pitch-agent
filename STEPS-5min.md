@@ -2,7 +2,7 @@
 
 ## Eve and the setup
 
-- Open [eve.dev](https://eve.dev). I am building this with Eve, Vercel's open-source agent framework. We use it internally for agents that manage work. It combines the AI SDK, AI Gateway, and Vercel Workflow; the agent itself is a directory of instructions, tools, and skills.
+- Open [eve.dev](https://eve.dev). I am building this with Eve, Vercel's open-source agent framework. We use it internally for agents that manage work. I also used it to build an automated DX tester that attempts a set of Next.js tasks and reports what was difficult. Eve combines the AI SDK, AI Gateway, and Vercel Workflow; the agent itself is a directory of instructions, tools, and skills.
 - I used to be a consultant, and I built this example for a demo at my old company. Writing a good pitch means combining customer context, consultant profiles, and past work.
 - Switch to VS Code. I started with Eve, added Slack and synthetic data, and stopped there. `eve dev` is on the left and FX is on the right.
 - The loop is: change it, run it, inspect it, judge it.
