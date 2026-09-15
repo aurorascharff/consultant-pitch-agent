@@ -67,7 +67,7 @@ export default slackChannel({
                   {
                     type: "button",
                     action_id: `eve_input_freeform:${request.requestId}`,
-                    text: { type: "plain_text", text: "Svar" },
+                    text: { type: "plain_text", text: "Reply" },
                     style: "primary",
                     value: request.requestId,
                   },
@@ -118,9 +118,9 @@ export default slackChannel({
             text: {
               type: "mrkdwn",
               text: [
-                "*Godkjenn konsulentforslaget*",
-                `*Kunde:* ${opportunity}`,
-                `*Konsulent:* ${consultant}`,
+                "*Approve consultant pitch*",
+                `*Customer:* ${opportunity}`,
+                `*Consultant:* ${consultant}`,
               ].join("\n"),
             },
           },
@@ -137,13 +137,13 @@ export default slackChannel({
               {
                 type: "button",
                 action_id: `${actionPrefix}:button:0`,
-                text: { type: "plain_text", text: "Avbryt" },
+                text: { type: "plain_text", text: "Cancel" },
                 value: "cancel",
               },
               {
                 type: "button",
                 action_id: `${actionPrefix}:button:1`,
-                text: { type: "plain_text", text: "Godkjenn" },
+                text: { type: "plain_text", text: "Approve" },
                 style: "primary",
                 value: "approve",
               },
@@ -152,7 +152,7 @@ export default slackChannel({
         ];
         const posted = await channel.thread.post({
           blocks,
-          text: `Godkjenn konsulentforslaget:\n\n${pitch}`,
+          text: `Approve consultant pitch:\n\n${pitch}`,
         });
 
         if (posted.id) {

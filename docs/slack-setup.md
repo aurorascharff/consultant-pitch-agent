@@ -49,16 +49,16 @@ Invite the bot to the channel where you want to start requests.
 Mention the bot:
 
 ```text
-@KonsuBot Vi skal svare på muligheten Nordlys Energi. Finn en konsulent som passer, og lag en kort pitch. Vektlegg React, Next.js og migrering.
+@KonsuBot We are responding to the Nordlys Energi opportunity. Find the best consultant and write a short pitch focused on React, Next.js, and migration.
 ```
 
 After the agent drafts the final pitch, reply in the same thread:
 
 ```text
-Denne ser bra ut.
+This looks good.
 ```
 
-The approval card shows the complete pitch with **Godkjenn** and **Avbryt** buttons. Only the person who started the thread can approve it. After approval, `submit_pitch` posts the same pitch to `#submitted-pitches`.
+The approval card shows the complete pitch with **Approve** and **Cancel** buttons. Only the person who started the thread can approve it. After approval, `submit_pitch` posts the same pitch to `#submitted-pitches`.
 
 Open **Observability** > **Agent Runs** in the Vercel project to inspect the model calls, tool activity, approval pause, duration, cost, and token usage.
 

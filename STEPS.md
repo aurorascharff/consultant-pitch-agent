@@ -36,22 +36,22 @@ model: "zai/glm-5.2",
 Role: You help consulting teams turn a customer request into a clear consultant brief.
 
 Behavior:
-- Reply in Norwegian Bokmaal.
+- Always reply in English.
 - Use only information the user provides. Do not invent consultants, projects, customers, availability, or results.
 - Ask one focused follow-up question when essential information is missing.
-- Keep the response concise and use this structure: Kundebehov, Onsket konsulentprofil, Neste steg.
+- Keep the response concise and use this structure: Customer need, Desired consultant profile, Next step.
 ````
 
 - Save. Expect a hot reload. The next session uses the new instructions. We did not restart the runtime.
-- Pause on the rules: Norwegian, no invented people, no blocking questions, and the same headings the finished agent uses.
+- Pause on the rules: English, no invented people, one focused question when required, and a consistent response structure.
 
 ## Havspor, still just a model
 
 - Send this:
 
-Lag en pitch for Havspor Logistikk. Vi trenger en konsulent som kan samle operasjonelle data, bygge integrasjoner og lage et React-dashboard.
+Write a pitch for Havspor Logistikk. We need a consultant who can consolidate operational data, build integrations, and create a React dashboard.
 
-- Watch the answer. Right shape, right language: Anbefalt konsulent, Kundens behov, Endelig pitch. But there is no name under Anbefalt konsulent, and Mangler is where the whole answer really lives.
+- Watch the answer. Right shape and language: Recommended consultant, Customer need, Final pitch. But there is no name under Recommended consultant, and Gaps is where the whole answer really lives.
 - No tool calls. We changed one Markdown file and the next session used it. It still cannot look Havspor up, cannot search consultants, cannot submit a pitch.
 - A useful consultant agent needs bounded access to opportunities, profiles, and a review step before it sends anything. I have that version ready.
 
@@ -60,7 +60,7 @@ Lag en pitch for Havspor Logistikk. Vi trenger en konsulent som kan samle operas
 - (Switch to the second screen: VS Code on the finished app, consultant-pitch-agent, folders open.) Same filesystem. Same Havspor prompt. Now it can retrieve, search, and submit.
 - Imagine a consulting company with an incoming opportunity. The information is spread across CRM, profiles, resource planning, case studies. The agent should gather that, recommend someone, draft a pitch. It must not invent experience or send without a person reviewing.
 - Open instructions.md first. This is where the job is. This is also where we detail the tools we added.
-- Walk the standing rules while you are in the file: get_opportunity before drafting. Search consultants. Load the pitch skill. Only claim what the tools returned. Norwegian. Draft first, label it Endelig pitch. When they say it looks good, call submit_pitch. Never say it was submitted unless the tool returns submitted true. If the caller is local, say that submission needs an authenticated Slack user.
+- Walk the standing rules while you are in the file: get_opportunity before drafting. Search consultants. Load the pitch skill. Only claim what the tools returned. English. Draft first, label it Final pitch. When they say it looks good, call submit_pitch. Never say it was submitted unless the tool returns submitted true. If the caller is local, say that submission needs an authenticated Slack user.
 - Close instructions.md.
 
 ## Then the tools
@@ -77,21 +77,21 @@ Lag en pitch for Havspor Logistikk. Vi trenger en konsulent som kan samle operas
 - Watch the tool calls. First get_opportunity. Fetching the customer before it writes.
 - Then search_consultants. Not picking a name from training data.
 - Then the profile, then one company case. Erik Lund is in the pitch because he is in the search result. One logistics case, not a stack of extra names.
-- Endelig pitch is the last heading. That is the record, not the model inventing a close.
+- Final pitch contains the exact customer-ready text. That is the record, not the model inventing a close.
 - Same prompt as the scaffold. The difference is the application around the model, which you can see as tool calls.
 
 ## Looks good, local fail
 
 - Do not rewrite it. Send this right away:
 
-Denne ser bra ut.
+This looks good.
 
 - Watch the pause. It proposed submit_pitch but has not executed. Approve in the UI.
 - It fails because we are not in Slack. Local-dev is not a Slack user. Expected. Say so. The pause is the point. Submission needs an authenticated Slack user.
 
 ## Evals
 
-- Open evals. We want this to behave the same way every time. It should always make this kind of pitch: retrieve first, search before naming, one company case, Endelig pitch, pause on submit until approval.
+- Open evals. We want this to behave the same way every time. It should always make this kind of pitch: retrieve first, search before naming, one company case, Final pitch, pause on submit until approval.
 - Run evals. Let it finish. Point at the pass, not at the JSON.
 - The demo is one run. The eval is the same run as a test. That is how you keep the agent from drifting after you leave the stage.
 
@@ -99,14 +99,14 @@ Denne ser bra ut.
 
 - (Third screen: deployed app in one tab, Slack in the other.) Same agent, now from Slack.
 - Mention KonsuBot in a thread with the same Havspor prompt.
-- Same retrieve, same search, same Endelig pitch.
-- Denne ser bra ut. Watch for Godkjenn. Click it.
-- See it appear in Slack. submitted-pitches has the same text. The run resumed after Godkjenn, it did not post twice.
+- Same retrieve, same search, same Final pitch.
+- This looks good. Watch for Approve. Click it.
+- See it appear in Slack. submitted-pitches has the same text. The run resumed after approval; it did not post twice.
 
 ## Agent Runs
 
 - (Fourth screen: Vercel Agent Runs.) Click the thread we just ran. Do not go hunting for submit_pitch.
 - Cost is about fifty cents. That is the point to land: a real run has a real cost.
-- Showcase the tool calls and the reasoning of the model. Opportunity, search, profile, case, the pitch, the pause, the continue after Godkjenn.
+- Showcase the tool calls and the reasoning of the model. Opportunity, search, profile, case, the pitch, the pause, and the continuation after approval.
 - We started with a model and one Markdown file. This is the same project, with tools, a Slack channel, a durable approval, evals. Prompting a model versus an agent as an application.
 - (Return to slides.)

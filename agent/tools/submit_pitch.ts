@@ -69,11 +69,11 @@ export default defineTool({
       body: {
         channel: channelId,
         client_msg_id: ctx.session.turn.id,
-        text: `Nytt konsulentforslag for ${opportunityRecord.customer}: ${consultantRecord.name}\n\n${pitch}`,
+        text: `New consultant proposal for ${opportunityRecord.customer}: ${consultantRecord.name}\n\n${pitch}`,
         blocks: [
           {
             type: "header",
-            text: { type: "plain_text", text: "Nytt konsulentforslag" },
+            text: { type: "plain_text", text: "New consultant proposal" },
           },
           {
             type: "section",
@@ -84,7 +84,7 @@ export default defineTool({
             elements: [
               {
                 type: "mrkdwn",
-                text: `*Kunde:* ${opportunityRecord.customer}   •   *Konsulent:* ${consultantRecord.name}   •   Godkjent av <@${slackUserId}>`,
+                text: `*Customer:* ${opportunityRecord.customer}   •   *Consultant:* ${consultantRecord.name}   •   Approved by <@${slackUserId}>`,
               },
             ],
           },

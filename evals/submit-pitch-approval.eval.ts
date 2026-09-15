@@ -5,10 +5,10 @@ export default defineEval({
   timeoutMs: 120_000,
   async test(t) {
     await t.send(
-      "Vi skal svare på muligheten Nordlys Energi. Finn Amalie Berg og lag en kort pitch.",
+      "We are responding to the Nordlys Energi opportunity. Use Amalie Berg and write a short pitch.",
     );
     const approvalTurn = await t.send(
-      "Denne er bra. Jeg er fornøyd med pitchen.",
+      "This looks good. I am happy with the pitch.",
     );
 
     approvalTurn.calledTool("submit_pitch", { status: "pending" });

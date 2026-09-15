@@ -3,7 +3,7 @@ import { includes, satisfies } from "eve/evals/expect";
 
 export default defineEval({
   description:
-    "Answers a Norwegian Havspor request entirely in Norwegian without an English preamble.",
+    "Answers a non-English Havspor request entirely in English without avoidable clarification questions.",
   timeoutMs: 120_000,
   async test(t) {
     await t.send(
@@ -21,7 +21,9 @@ export default defineEval({
       satisfies(
         (reply) =>
           typeof reply === "string" &&
-          !/hvilke datakilder|skal én konsulent|har dere en liste/i.test(reply),
+          !/which data sources|do you want one consultant|do you have a list/i.test(
+            reply,
+          ),
         "does not replace the pitch with avoidable clarification questions",
       ),
     );
@@ -30,8 +32,9 @@ export default defineEval({
       satisfies(
         (reply) =>
           typeof reply === "string" &&
-          reply.trimStart().startsWith("**Anbefalt konsulent:**"),
-        "starts directly with the Norwegian recommendation heading",
+          reply.trimStart().startsWith("**Recommended consultant:**") &&
+          !/Anbefalt konsulent|Endelig pitch|Grunnlag/i.test(reply),
+        "uses the English response format even when the request is Norwegian",
       ),
     );
   },

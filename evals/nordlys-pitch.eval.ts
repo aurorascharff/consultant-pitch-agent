@@ -7,7 +7,7 @@ export default defineEval({
   timeoutMs: 120_000,
   async test(t) {
     await t.send(
-      "Vi skal svare på muligheten Nordlys Energi. Finn en konsulent som passer, og lag en kort pitch. Vektlegg React, Next.js og migrering.",
+      "We are responding to the Nordlys Energi opportunity. Find the best consultant and write a short pitch focused on React, Next.js, and migration.",
     );
 
     t.succeeded();
@@ -17,5 +17,6 @@ export default defineEval({
     t.calledTool("search_case_studies");
     t.check(t.reply, includes("Amalie Berg"));
     t.check(t.reply, includes("Nordlys Energi"));
+    t.check(t.reply, includes("Final pitch"));
   },
 });

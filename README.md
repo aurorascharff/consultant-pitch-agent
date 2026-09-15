@@ -1,6 +1,6 @@
 # Consultant pitch agent
 
-This Eve demo agent recommends a fictional consultant for a sales opportunity and writes an evidence-based pitch. It uses tools, a load-on-demand skill, human approval, evals, and Vercel Agent Runs.
+This Eve demo agent explores fictional sales opportunities, compares consultants, and writes evidence-based pitches in English. It uses tools, load-on-demand skills, human approval, evals, and Vercel Agent Runs.
 
 All people, customers, projects, and results are synthetic.
 
@@ -17,6 +17,26 @@ npm run dev
 
 The `submit_pitch` tool always requires an authenticated Slack user. You can inspect and approve its proposed call in `eve dev`, but execution then fails at the authorization check because the local terminal is not Slack. This keeps local development from simulating a production identity.
 
+## What the agent can do
+
+- List and summarize the available sales opportunities.
+- Recommend one consultant or compare a shortlist against an opportunity.
+- Draft standard, executive, or email pitches from retrieved evidence.
+- Revise a pitch while preserving the exact final text for approval.
+- Submit an approved pitch to Slack with an authenticated-user check.
+
+Ask what is available:
+
+```text
+Which sales opportunities are available?
+```
+
+Compare candidates:
+
+```text
+Compare Amalie Berg and Erik Lund for Nordlys Energi. Show the trade-offs but do not write a pitch.
+```
+
 ## Try different opportunities
 
 Each synthetic opportunity emphasizes a different kind of consulting work and should surface a different profile.
@@ -24,25 +44,25 @@ Each synthetic opportunity emphasizes a different kind of consulting work and sh
 **Portal migration and Next.js (Amalie Berg)**
 
 ```text
-Vi skal svare på muligheten Nordlys Energi. Finn en konsulent som passer, og lag en kort pitch. Vektlegg React, Next.js og migrering.
+We are responding to the Nordlys Energi opportunity. Find the best consultant and write a short pitch focused on React, Next.js, and migration.
 ```
 
 **APIs and a logistics data platform (Erik Lund)**
 
 ```text
-Lag en pitch for Havspor Logistikk. Vi trenger en konsulent som kan samle operasjonelle data, bygge integrasjoner og lage et React-dashboard.
+Write an email pitch for Havspor Logistikk. We need a consultant who can consolidate operational data, build integrations, and create a React dashboard.
 ```
 
 **Accessibility and healthcare forms (Sara Nilsen)**
 
 ```text
-Finn den beste konsulenten for Solsiden Helse og skriv en pitch. Vektlegg universell utforming, brukerinnsikt og et designsystem flere team kan bruke.
+Find the best consultant for Solsiden Helse and write an executive pitch focused on accessibility, user research, and a design system that several teams can use.
 ```
 
 **Cloud modernization and technical leadership (Jonas Mo)**
 
 ```text
-Skriv en pitch for Nordnett Telekom. De trenger teknisk ledelse, en målarkitektur og en trinnvis plan for skymigrering på tvers av åtte team.
+Write a pitch for Nordnett Telekom. They need engineering leadership, a target architecture, and a staged cloud-migration plan across eight teams.
 ```
 
 ## Verify the agent
@@ -53,7 +73,7 @@ npm run eval
 npm run build
 ```
 
-The evals verify the source chain, recommendation, approval gate, and behavior for unsupported consultants.
+The evals verify English output, catalog discovery, comparisons, the evidence chain, the approval gate, and behavior for unsupported consultants.
 
 ## Deploy to Slack
 
@@ -62,7 +82,7 @@ Follow the [Slack setup guide](docs/slack-setup.md) to deploy the agent, configu
 ## Project structure
 
 - `agent/instructions.md` defines the agent's role and submission behavior.
-- `agent/tools/` contains the data access and protected submission tools.
-- `agent/skills/write-sales-pitch/` defines the evidence-based pitch workflow.
+- `agent/tools/` contains catalog, data access, and protected submission tools.
+- `agent/skills/` defines the pitch-writing and consultant-comparison workflows.
 - `agent/channels/slack.ts` renders the approval flow in Slack.
 - `evals/` tests recommendation quality and submission safety.
