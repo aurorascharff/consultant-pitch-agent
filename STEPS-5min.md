@@ -5,6 +5,8 @@
 - Open [eve.dev](https://eve.dev). Say: "I am building this with Eve, Vercel's open-source framework for building agents. We use it internally to build agents that manage work and carry out tasks."
 - "It brings together the AI SDK, AI Gateway, and Vercel Workflow, and lets you define an agent with simple files for its instructions, tools, and skills."
 - "I want to show you how to use it, but more importantly, I want to show you how I actually code with it."
+- "I chose this example because I was actually demoing Eve to my old company. I used to work as a consultant, and writing pitches like this was something I had to do all the time."
+- "It sounds simple, but it means pulling together a lot of context: understanding the customer, finding the right consultant, checking their full profile, finding relevant past work, and then turning all of that into a credible pitch. That makes it a useful job for an agent with tools."
 
 ## Set up the split view
 
