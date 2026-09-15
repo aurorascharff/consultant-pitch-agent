@@ -1,148 +1,78 @@
 # FIVE-MINUTE DEMO STEPS
 
-## Introduce Eve
+## Eve and the setup
 
-- Open [eve.dev](https://eve.dev). Say: "I am building this with Eve, Vercel's open-source framework for building agents. We use it internally to build agents that manage work and carry out tasks."
-- "It brings together the AI SDK, AI Gateway, and Vercel Workflow, and lets you define an agent with simple files for its instructions, tools, and skills."
-- "I want to show you how to use it, but more importantly, I want to show you how I actually code with it."
-- "I chose this example because I was actually demoing Eve to my old company. I used to work as a consultant, and writing pitches like this was something I had to do all the time."
-- "It sounds simple, but it means pulling together a lot of context: understanding the customer, finding the right consultant, checking their full profile, finding relevant past work, and then turning all of that into a credible pitch. That makes it a useful job for an agent with tools."
-
-## Set up the split view
-
-- (The project is already open in VS Code.) Keep the editor visible and split the integrated terminal into two panes.
-- Run eve dev in the left terminal. Keep the right terminal ready for FX.
-- The audience should be able to see the agent running, the coding agent working, and the files changing without switching windows.
-- What I want to show is not only the finished agent. I want to show how I actually build one.
-- The important work is not typing the most code. It is making one change, testing it, seeing whether it behaves the way I intended, and assessing the quality of the result. I am going to repeat that loop throughout the demo.
-- This project is intentionally close to that starter. I connected the local Eve and Slack channels and added synthetic opportunities, consultant profiles, and case studies. That is about it; none of the agentic behavior has been built yet.
-- Eve compiles those files into the agent runtime. Locally, `eve dev` gives me a conversation interface and watches the directory, so when FX changes a file, Eve rebuilds the agent and I can test it immediately.
-- Open agent/agent.ts. The provider and model are one string, and the model call goes through Vercel AI Gateway. Eve controls how the agent behaves; AI Gateway lets me choose which model powers it.
-- Open agent/instructions.md. At the start, this is still a generic English-language assistant. It has not been told that its job is to write consultant pitches.
-- Open agent/lib/data.ts briefly. The customer opportunities, consultant profiles, and case studies exist in the application.
-- The important part is that the model has not been given a job and cannot use that data yet. There are no tools and no skills.
-- Keep the deployed Slack version open and ready for the final part of the demo.
+- Open [eve.dev](https://eve.dev). I am building this with Eve, Vercel's open-source agent framework. We use it internally for agents that manage work. It combines the AI SDK, AI Gateway, and Vercel Workflow; the agent itself is a directory of instructions, tools, and skills.
+- I used to be a consultant, and I built this example for a demo at my old company. Writing a good pitch means combining customer context, consultant profiles, and past work.
+- Switch to VS Code. I started with Eve, added Slack and synthetic data, and stopped there. `eve dev` is on the left and FX is on the right.
+- The loop is: change it, run it, inspect it, judge it.
 
 ## Start with a generic bot
 
-- In the left terminal, open a fresh eve conversation.
-- Send this:
+- In `eve dev`, start a fresh conversation and send:
 
 Hello.
 
-- Watch the answer. It is a generic bot because we have not told it what application we are building yet.
-- Point at the run. There are no tool calls and no consultant-pitching behavior.
+- The runtime works, but the bot has no job yet.
 
-## Give the bot a job
+## Give it a job with FX
 
-- Move to the right terminal and start FX. Leave eve dev running beside it.
-- I sometimes use Codex for this kind of work too. For this demo I want the entire coding flow to stay visible inside the repository and its VS Code terminal, so I am using FX.
-- FX is the coding agent I am going to use to change this application. We just launched it from Vercel Labs. It is open source, model-agnostic, and designed to feel more like a small Unix tool than a heavy terminal interface.
-- FX is using Vercel AI Gateway. The Gateway gives me one interface and one model catalog across providers, so I can try different models without changing tools or writing a new integration for each provider.
-- If you have used OpenRouter, it solves a similar model-access problem. This demo is using Vercel AI Gateway, which is integrated with the same Vercel project, billing, and observability. FX can also connect to OpenRouter separately, but that is not what I am using here.
-- Open `/models` and search for `qwen`. Point out that the catalog includes open model families such as Qwen alongside models from Anthropic, OpenAI, xAI, and others.
-- Select Claude Opus for this coding task, toggle `/fast`, and run `/status` to confirm the active model.
-- That is the practical benefit: I can inspect the available models, choose the one that fits this task, and continue in the same FX conversation.
-- I normally use Wispr Flow for this. It lets me dictate anywhere I can type, so the same voice-prompting workflow works whether I am using Codex, FX, or another coding interface.
-- Today I am using Wispr Flow to voice-prompt FX. I am going to add one capability at a time and inspect the code it writes.
-- Say this:
+- Start FX. It is Vercel's open-source coding agent, and I am voice-prompting it with Wispr Flow.
+- FX uses AI Gateway: model access across providers, like OpenRouter, but integrated with Vercel billing and observability. Open `/models`, search `qwen`, switch to Claude Opus, toggle `/fast`, and confirm with `/status`.
+- Say:
 
 Make this an English consultant-pitching assistant. When someone says hello, briefly explain what it can do and ask which customer or opportunity they want help with. Keep the instructions short and clear.
 
-- Open agent/instructions.md and show the small, readable change.
-- Move back to eve dev, start a fresh conversation, and send `Hello.` again.
-- The response now explains the agent's job. We changed its behavior with instructions, but it still cannot retrieve any company data.
+- Open `agent/instructions.md`. Send `Hello.` again. It knows its job, but it cannot access the data.
 
-## Add the opportunity tool
+## Add the tools
 
-- Return to the same FX conversation. Say this:
+- In the same FX conversation, say:
 
 Give this agent a tool that looks up a sales opportunity by customer name or ID. Use the existing synthetic data and keep it simple.
 
-- Watch agent/tools appear. Open get_opportunity.
-- This is a typed function over application data. The model can now retrieve a customer instead of guessing what the customer needs.
-- Move back to the left terminal and send the pitch request. Eve has hot-reloaded the new tool, so there is nothing to restart.
+- Open the tool. Eve hot-reloads it. Send:
 
 Write a short pitch for Harborline Logistics and recommend the best consultant for its data platform, integrations, and React dashboard.
 
-- Watch the agent call `getOpportunity`. The answer is already grounded in the real opportunity, but it still cannot search for the right consultant.
-
-## Add consultant matching
-
-- Stay in the same fx conversation. Say this:
+- `getOpportunity` runs, but the bot still cannot find a consultant.
+- Return to FX and say:
 
 Now add consultant matching. I need one tool that searches consultants by skills and industry, and another that retrieves the selected consultant's full profile.
 
-- Watch the two tools appear.
-- Search gives the model a shortlist. The profile gives it the evidence it needs before naming someone.
-- We are building this up capability by capability. Nothing here depends on the model having seen our business data during training.
-- Move back to the agent and send the same request again.
-- Watch it call the opportunity and consultant tools. It can now identify and inspect the right person, but it does not yet have a company case study to support the pitch.
+- Run Harborline again. Now it retrieves the opportunity, searches, and inspects the selected profile.
 
-## Add the pitch workflow
+## Add the skill
 
-- Say this:
+- In FX, say:
 
 Now make the pitch evidence-based. Add a tool that searches the company case studies, then add a pitch-writing skill that uses the opportunity, consultant search, full profile, and one relevant case study. Keep the main instructions short, keep everything in English, and never invent claims or metrics.
 
-- Open the skill when it appears.
-- The tools provide access to data. The skill tells the agent how to combine those tools for this particular job.
-- The workflow should retrieve the customer, find candidates, inspect the selected consultant, find one relevant company example, and then write the pitch.
-- Keep the explanation focused on the skill. The final prose is flexible; the important part is that the skill gives the agent a clear, evidence-based workflow and tells it not to invent claims or metrics.
-
-## Run the same request again
-
-- Move back to the left terminal. Eve has hot-reloaded the latest files. Start a fresh conversation so the final comparison is clean.
-- Send the exact same request:
-
-Write a short pitch for Harborline Logistics and recommend the best consultant for its data platform, integrations, and React dashboard.
-
-- Watch the tool calls. First the opportunity. Then consultant search. Then the full profile. Then one company case study.
-- Ethan Reed is now in the pitch because he is in the application data, not because the model invented a plausible person.
-- Do not stop at seeing that the tools ran. Read enough of the result to assess whether it chose the right evidence and turned that evidence into a useful pitch. A technically successful run can still produce a weak result.
-- Open one generated tool and the skill in VS Code. The audience can see that the behavior is source code.
-- Same model. Same user request. The difference is the application around it.
+- Open the skill. Tools provide data; the skill defines the workflow.
+- Run Harborline again. Watch the four calls, then read the pitch. Tool calls can pass while the result is still weak.
 
 ## Add the eval
 
-- One good run is not enough. I want to know that this keeps behaving the way we expect.
-- Return to fx and say this:
+- In FX, say:
 
 Now create one eval for the Northstar Energy pitch. Verify that the run succeeds, calls all four tools, recommends Amelia Brooks, mentions Northstar Energy, and produces a final pitch. Keep the checks deterministic and use the standard Eve eval setup.
 
-- Open the generated eval.
-- Point out that it checks the tool chain and the important facts. It does not compare the full wording of a model response.
-- Run:
+- Open the eval, then run:
 
 pnpm eval
 
-- Let it finish. Point at the pass, not at the raw event output.
-- The first conversation showed that the agent can do the job. The eval makes that behavior repeatable and testable.
-- The eval protects the facts and workflow I can state deterministically. It does not replace judgment about whether the pitch is actually good.
-- In a real project, I would review that quality with the people I am building for. Here that might be the consulting or sales team; in another product it would be a different domain expert.
+- The eval protects the workflow and facts. The people I am building for still judge pitch quality.
 
-## Show it in Slack
+## Show the deployed Slack version
 
-- So why am I showing you Slack? So far I have been building and testing the agent locally in eve dev, but an agent becomes much more useful when you connect it to where people already work.
-- I do not have time to deploy and configure Slack live, so I prepared that version in advance. It is the same agent, deployed and connected through Eve's Slack channel, and this is what the experience looks like for the team using it.
-- This is the deployed version of the stack we just saw on eve.dev: Vercel hosts the agent, AI Gateway routes the model calls, Vercel Workflow keeps the session durable while it waits for approval, and Eve's channel maps the Slack thread to that session. I can inspect the complete run in Agent Runs under Vercel Observability.
-- Switch to the deployed agent in Slack. Do not deploy during the demo; this version is already open and ready.
-- Mention PitchBot in a thread with the same request:
-
-Write a short pitch for Harborline Logistics and recommend the best consultant for its data platform, integrations, and React dashboard.
-
-- The same agent retrieves the opportunity, searches consultants, inspects Ethan Reed's profile, and finds the supporting case study.
-- In the deployed version, I have also added an approval step. Eve can use generative UI for this kind of interaction, so the approval is presented as interface rather than another block of agent text.
-- Reply in the same thread:
+- I cannot deploy live, so I prepared the same agent in Slack. Vercel hosts it; AI Gateway routes the model; Workflow keeps it durable during approval.
+- Mention PitchBot with the Harborline request. Then reply:
 
 This looks good.
 
-- The agent does not send immediately. It shows the complete pitch in an approval card.
-- Click Approve. Show the same pitch appear in submitted-pitches.
-- The workflow moved from the terminal to Slack, but the tools, evidence, and approval boundary stayed the same.
+- The agent shows the pitch in an approval card. Click **Approve** and show it appear in `submitted-pitches`.
+- Same agent, now where the team works.
 
 ## Close
 
-- We started with a generic bot and some application data. First we gave the bot a job, then we gave it controlled access to the data.
-- We added one bounded capability at a time, tested every change, inspected what the agent actually did, judged the quality of the result, turned the deterministic expectations into an executable eval, and then ran the same agent through Slack with human approval.
-- That loop is most of the work: build, run, inspect, evaluate, and improve. The code generation is only one part of making the agent good.
+- Build, run, inspect, evaluate, improve. Evals keep behavior stable; human review keeps the result good.
