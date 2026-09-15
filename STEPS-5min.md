@@ -20,36 +20,24 @@ Write a short pitch for Harborline Logistics and recommend the best consultant f
 
 - Swipe to the second terminal tab and show FX. This is another tool we built: an open-source coding agent I can run inside the repo. I am voice-prompting it with Wispr Flow.
 - FX uses AI Gateway: model access across providers, like OpenRouter, but integrated with Vercel billing and observability. Open `/models`, search `qwen`, switch to Claude Opus, toggle `/fast`, and confirm with `/status`.
-- Now give the agent one capability at a time and rerun the same pitch after every change.
+- Now build the complete workflow in one prompt.
 
-## Add the tools
-
-- In FX, say:
-
-Give this agent a tool that looks up a sales opportunity by customer name or ID. Use the existing synthetic data and keep it simple.
-
-- Open the tool. Eve hot-reloads it. Paste the same Harborline pitch request again.
-- `getOpportunity` runs, but the bot still cannot find a consultant.
-- Return to FX and say:
-
-Now add consultant matching. I need one tool that searches consultants by skills and industry, and another that retrieves the selected consultant's full profile.
-
-- Paste the same Harborline pitch request again. Now it retrieves the opportunity, searches, and inspects the selected profile.
-
-## Add the skill
+## Build the agent
 
 - In FX, say:
 
-Now make the pitch evidence-based. Add a tool that searches the company case studies, then add a pitch-writing skill that uses the opportunity, consultant search, full profile, and one relevant case study. Keep the main instructions short, keep everything in English, and never invent claims or metrics.
+I want this agent to write evidence-based customer pitches and recommend the right consultant. It should understand the opportunity, find suitable consultants, inspect the person it recommends, and find one relevant company case study before writing. Use the synthetic data already in the repo. Give it tools to access the data and a skill for the pitch workflow. Keep the main instructions short, keep everything in English, and do not invent details or metrics.
 
-- Open the skill. Tools provide data; the skill defines the workflow.
-- Paste the same Harborline pitch request again. Watch the four calls, then read the pitch. Tool calls can pass while the result is still weak.
+- FX already has the repository's Eve context, so I can describe what I need instead of specifying the framework implementation.
+- Watch the tools and skill appear. Open them as FX works: tools provide access to data; the skill defines how the agent combines them for this job.
+- Eve hot-reloads the files. Paste the same Harborline request again.
+- Watch the calls, then read the pitch. Did it use the right data, choose the right consultant, find a relevant example, and write something useful? If not, iterate. That judgment is the real work.
 
 ## Add the eval
 
 - In FX, say:
 
-Now create one eval for the Northstar Energy pitch. Verify that the run succeeds, calls all four tools, recommends Amelia Brooks, mentions Northstar Energy, and produces a final pitch. Keep the checks deterministic and use the standard Eve eval setup.
+Now I want to know this keeps working. Create an eval for a Northstar Energy pitch. It should verify that the agent uses all four data tools, recommends Amelia Brooks, mentions the customer, and returns a real pitch. Keep the checks deterministic and use Eve's standard eval setup.
 
 - Open the eval, then run:
 
