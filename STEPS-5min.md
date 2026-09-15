@@ -17,7 +17,7 @@ Hello.
 
 ## Give it a job with FX
 
-- Start FX. It is Vercel's open-source coding agent, and I am voice-prompting it with Wispr Flow.
+- Swipe to the second terminal tab and show FX. This is another tool we built: an open-source coding agent I can run inside the repo. I am voice-prompting it with Wispr Flow.
 - FX uses AI Gateway: model access across providers, like OpenRouter, but integrated with Vercel billing and observability. Open `/models`, search `qwen`, switch to Claude Opus, toggle `/fast`, and confirm with `/status`.
 - Say:
 
@@ -25,22 +25,29 @@ Make this an English consultant-pitching assistant. When someone says hello, bri
 
 - Open `agent/instructions.md`. Send `Hello.` again. It knows its job, but it cannot access the data.
 
+## Try the pitch without tools
+
+- Explain the agent loop: the model reads the conversation, instructions, and available tools; it can call a tool, receive the result, and continue until it has a final answer. Right now the available-tool list is empty.
+- Paste the request we will use throughout the demo:
+
+Write a short pitch for Harborline Logistics and recommend the best consultant for its data platform, integrations, and React dashboard.
+
+- Watch it struggle. It understands the task, but it cannot retrieve Harborline, search the consultants, or find evidence. There are no tool calls.
+- Now return to FX and give it one capability at a time, rerunning this same prompt after every change.
+
 ## Add the tools
 
 - In the same FX conversation, say:
 
 Give this agent a tool that looks up a sales opportunity by customer name or ID. Use the existing synthetic data and keep it simple.
 
-- Open the tool. Eve hot-reloads it. Send:
-
-Write a short pitch for Harborline Logistics and recommend the best consultant for its data platform, integrations, and React dashboard.
-
+- Open the tool. Eve hot-reloads it. Paste the same Harborline pitch request again.
 - `getOpportunity` runs, but the bot still cannot find a consultant.
 - Return to FX and say:
 
 Now add consultant matching. I need one tool that searches consultants by skills and industry, and another that retrieves the selected consultant's full profile.
 
-- Run Harborline again. Now it retrieves the opportunity, searches, and inspects the selected profile.
+- Paste the same Harborline pitch request again. Now it retrieves the opportunity, searches, and inspects the selected profile.
 
 ## Add the skill
 
@@ -49,7 +56,7 @@ Now add consultant matching. I need one tool that searches consultants by skills
 Now make the pitch evidence-based. Add a tool that searches the company case studies, then add a pitch-writing skill that uses the opportunity, consultant search, full profile, and one relevant case study. Keep the main instructions short, keep everything in English, and never invent claims or metrics.
 
 - Open the skill. Tools provide data; the skill defines the workflow.
-- Run Harborline again. Watch the four calls, then read the pitch. Tool calls can pass while the result is still weak.
+- Paste the same Harborline pitch request again. Watch the four calls, then read the pitch. Tool calls can pass while the result is still weak.
 
 ## Add the eval
 
