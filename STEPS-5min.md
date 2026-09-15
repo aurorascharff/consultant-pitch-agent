@@ -19,7 +19,9 @@ Write a short pitch for Harborline Logistics and recommend the best consultant f
 ## Open FX
 
 - Swipe to the second terminal tab and show FX. This is another tool we built: an open-source coding agent I can run inside the repo. I am voice-prompting it with Wispr Flow.
-- FX uses AI Gateway: model access across providers, like OpenRouter, but integrated with Vercel billing and observability. Open `/models` and search `qwen`. Qwen is an open model family from Alibaba that I can try through the same Gateway as Claude or GPT, without changing integrations. Switch to Claude Opus, toggle `/fast`, and confirm with `/status`.
+- FX uses AI Gateway: one model catalog across providers, integrated with Vercel billing and observability.
+- Open `/models` and search `qwen`. Say: "Qwen is an open model family from Alibaba. Through AI Gateway, I can try it alongside Claude or GPT using the same interface, billing, and observability, and switch models without changing my code."
+- Switch to Claude Opus, toggle `/fast`, and confirm with `/status`.
 - Now build the complete workflow in one prompt.
 
 ## Build the agent
