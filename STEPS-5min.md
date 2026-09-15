@@ -6,6 +6,7 @@
 - Run eve dev in the left terminal. Keep the right terminal ready for FX.
 - The audience should be able to see the agent running, the coding agent working, and the files changing without switching windows.
 - What I want to show is not only the finished agent. I want to show how I actually build one.
+- This is intentionally close to the starter. I ran `npx eve@latest init consultant-pitch-agent`, connected the local Eve and Slack channels, and added synthetic opportunities, consultant profiles, and case studies. That is about it; none of the agentic behavior has been built yet.
 - This application uses eve, Vercel's open-source agent framework. Eve is the harness around the model. It gives me the filesystem structure, durable sessions, tools, skills, channels, approvals, and evals that turn a model into an application.
 - An eve agent is just a directory. The instructions and workflows are Markdown. The tools are TypeScript. I can see the complete application in the editor and change it as code.
 - Open agent/agent.ts. The provider and model are one string. This agent makes that model call through Vercel AI Gateway.
