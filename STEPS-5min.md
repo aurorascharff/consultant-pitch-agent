@@ -1,133 +1,62 @@
 # FIVE-MINUTE DEMO STEPS
 
-## Set up the split view
+## Eve and the setup
 
-- (The project is already open in VS Code.) Keep the editor visible and split the integrated terminal into two panes.
-- Run eve dev in the left terminal. Keep the right terminal ready for FX.
-- The audience should be able to see the agent running, the coding agent working, and the files changing without switching windows.
-- What I want to show is not only the finished agent. I want to show how I actually build one.
-- This is intentionally close to the starter. I ran `npx eve@latest init consultant-pitch-agent`, connected the local Eve and Slack channels, and added synthetic opportunities, consultant profiles, and case studies. That is about it; none of the agentic behavior has been built yet.
-- This application uses eve, Vercel's open-source agent framework. Eve is the harness around the model. It gives me the filesystem structure, durable sessions, tools, skills, channels, approvals, and evals that turn a model into an application.
-- An eve agent is just a directory. The instructions and workflows are Markdown. The tools are TypeScript. I can see the complete application in the editor and change it as code.
-- Open agent/agent.ts. The provider and model are one string. This agent makes that model call through Vercel AI Gateway.
-- AI Gateway gives me one API for more than 200 models from different providers, with shared billing and observability. I can change that string without rewriting the agent or managing a separate integration for every provider.
-- That separation matters. Eve controls how the agent behaves. AI Gateway lets me choose which model powers it.
-- Open agent/instructions.md. At the start, this is still a generic English-language assistant. It has not been told that its job is to write consultant pitches.
-- Open agent/lib/data.ts briefly. The customer opportunities, consultant profiles, and case studies exist in the application.
-- The important part is that the model has not been given a job and cannot use that data yet. There are no tools and no skills.
-- Keep the deployed Slack version open and ready for the final part of the demo.
+- Open [eve.dev](https://eve.dev). I am building this with Eve, Vercel's open-source agent framework. We use it internally for agents that manage work. I also used it to build an automated DX tester that attempts a set of Next.js tasks and reports what was difficult. Eve combines the AI SDK, AI Gateway, and Vercel Workflow; the agent itself is a directory of instructions, tools, and skills.
+- I used to be a consultant, and I built this example for a demo at my old company. Writing a good pitch means combining customer context, consultant profiles, and past work.
+- Switch to VS Code. I started with Eve, added Slack, synthetic data, and short pitch instructions. There are no tools or skills yet. `eve dev` is on the left and FX is on the right.
+- The loop is: change it, run it, inspect it, judge it.
 
-## Start with a generic bot
+## Run the pitch without tools
 
-- In the left terminal, open a fresh eve conversation.
-- Send this:
-
-Hello.
-
-- Watch the answer. It is a generic bot because we have not told it what application we are building yet.
-- Point at the run. There are no tool calls and no consultant-pitching behavior.
-
-## Give the bot a job
-
-- Move to the right terminal and start FX. Leave eve dev running beside it.
-- I sometimes use Codex for this kind of work too. For this demo I want the entire coding flow to stay visible inside the repository and its VS Code terminal, so I am using FX.
-- FX is the coding agent I am going to use to change this application. We just launched it from Vercel Labs. It is open source, model-agnostic, and designed to feel more like a small Unix tool than a heavy terminal interface.
-- FX is also using Vercel AI Gateway. That gives me the same catalog of models here in the coding agent, and I can switch models without changing the workflow or moving to another tool.
-- Open `/models` and switch to Claude Opus. Turn on `/fast` if it is not already enabled, then use `/status` to show the active model.
-- This is the practical benefit of the Gateway: I can choose the model that fits the task from inside FX and keep working in the same interface.
-- I normally use Wispr Flow for this. It lets me dictate anywhere I can type, so the same voice-prompting workflow works whether I am using Codex, FX, or another coding interface.
-- Today I am using Wispr Flow to voice-prompt FX. I am going to add one capability at a time and inspect the code it writes.
-- Say this:
-
-Make this an English consultant-pitching assistant. When someone says hello, briefly explain what it can do and ask which customer or opportunity they want help with. Keep the instructions short and clear.
-
-- Open agent/instructions.md and show the small, readable change.
-- Move back to eve dev, start a fresh conversation, and send `Hello.` again.
-- The response now explains the agent's job. We changed its behavior with instructions, but it still cannot retrieve any company data.
-
-## Add the opportunity tool
-
-- Return to the same FX conversation. Say this:
-
-Give this agent a tool that looks up a sales opportunity by customer name or ID. Use the existing synthetic data and keep it simple.
-
-- Watch agent/tools appear. Open get_opportunity.
-- This is a typed function over application data. The model can now retrieve a customer instead of guessing what the customer needs.
-- Move back to the left terminal and send the pitch request. Eve has hot-reloaded the new tool, so there is nothing to restart.
+- Explain the agent loop: the model reads the conversation, instructions, and available tools; it can call a tool, receive the result, and continue until it has a final answer. Right now the available-tool list is empty.
+- In `eve dev`, paste the request we will use throughout the demo:
 
 Write a short pitch for Harborline Logistics and recommend the best consultant for its data platform, integrations, and React dashboard.
 
-- Watch the agent call `getOpportunity`. The answer is already grounded in the real opportunity, but it still cannot search for the right consultant.
+- Watch it struggle. It can write plausible text, but it cannot retrieve Harborline, search consultants, or find evidence. It has no tools or pitch-writing skill.
 
-## Add consultant matching
+## Open FX
 
-- Stay in the same fx conversation. Say this:
+- Swipe to the second terminal tab and show FX. This is another tool we built: an open-source coding agent I can run inside the repo. I am voice-prompting it with Wispr Flow.
+- FX uses AI Gateway: one model catalog across providers, integrated with Vercel billing and observability.
+- Open `/models` and search `qwen`. Say: "Qwen is an open model family from Alibaba. Through AI Gateway, I can try it alongside Claude or GPT using the same interface, billing, and observability, and switch models without changing my code."
+- Switch to Claude Opus, toggle `/fast`, and confirm with `/status`.
+- Now build the complete workflow in one prompt.
 
-Now add consultant matching. I need one tool that searches consultants by skills and industry, and another that retrieves the selected consultant's full profile.
+## Build the agent
 
-- Watch the two tools appear.
-- Search gives the model a shortlist. The profile gives it the evidence it needs before naming someone.
-- We are building this up capability by capability. Nothing here depends on the model having seen our business data during training.
-- Move back to the agent and send the same request again.
-- Watch it call the opportunity and consultant tools. It can now identify and inspect the right person, but it does not yet have a company case study to support the pitch.
+- In FX, say:
 
-## Add the pitch workflow
+I want this agent to write evidence-based customer pitches and recommend the right consultant. It should understand the opportunity, find suitable consultants, inspect the person it recommends, and find one relevant company case study before writing. Use the synthetic data already in the repo. Give it tools to access the data and a skill for the pitch workflow. Keep the main instructions short, keep everything in English, and do not invent details or metrics.
 
-- Say this:
-
-Now make the pitch evidence-based. Add a tool that searches the company case studies, then add a pitch-writing skill that uses the opportunity, consultant search, full profile, and one relevant case study. Keep the main instructions short, keep everything in English, and never invent claims or metrics.
-
-- Open the skill when it appears.
-- The tools provide access to data. The skill tells the agent how to combine those tools for this particular job.
-- The workflow should retrieve the customer, find candidates, inspect the selected consultant, find one relevant company example, and then write the pitch.
-- Keep the explanation focused on the skill. The final prose is flexible; the important part is that the skill gives the agent a clear, evidence-based workflow and tells it not to invent claims or metrics.
-
-## Run the same request again
-
-- Move back to the left terminal. Eve has hot-reloaded the latest files. Start a fresh conversation so the final comparison is clean.
-- Send the exact same request:
-
-Write a short pitch for Harborline Logistics and recommend the best consultant for its data platform, integrations, and React dashboard.
-
-- Watch the tool calls. First the opportunity. Then consultant search. Then the full profile. Then one company case study.
-- Ethan Reed is now in the pitch because he is in the application data, not because the model invented a plausible person.
-- Open one generated tool and the skill in VS Code. The audience can see that the behavior is source code.
-- Same model. Same user request. The difference is the application around it.
+- FX already has the repository's Eve context, so I can describe what I need instead of specifying the framework implementation.
+- Watch the tools and skill appear. Open them as FX works: tools provide access to data; the skill defines how the agent combines them for this job.
+- Eve hot-reloads the files. Paste the same Harborline request again.
+- Watch the calls, then read the pitch. Did it use the right data, choose the right consultant, find a relevant example, and write something useful? If not, iterate. That judgment is the real work.
 
 ## Add the eval
 
-- One good run is not enough. I want to know that this keeps behaving the way we expect.
-- Return to fx and say this:
+- In FX, say:
 
-Now create one eval for the Northstar Energy pitch. Verify that the run succeeds, calls all four tools, recommends Amelia Brooks, mentions Northstar Energy, and produces a final pitch. Keep the checks deterministic and use the standard Eve eval setup.
+Now I want to know this keeps working. Create an eval for a Northstar Energy pitch. It should verify that the agent uses all four data tools, recommends Amelia Brooks, mentions the customer, and returns a real pitch. Keep the checks deterministic and use Eve's standard eval setup.
 
-- Open the generated eval.
-- Point out that it checks the tool chain and the important facts. It does not compare the full wording of a model response.
-- Run:
+- Open the eval, then run:
 
 pnpm eval
 
-- Let it finish. Point at the pass, not at the raw event output.
-- The first conversation showed that the agent can do the job. The eval makes that behavior repeatable and testable.
+- The eval protects the workflow and facts. The people I am building for still judge pitch quality.
 
-## Show it in Slack
+## Show the deployed Slack version
 
-- Switch to the deployed agent in Slack. Do not deploy during the demo; this version is already open and ready.
-- Mention PitchBot in a thread with the same request:
-
-Write a short pitch for Harborline Logistics and recommend the best consultant for its data platform, integrations, and React dashboard.
-
-- The same agent retrieves the opportunity, searches consultants, inspects Ethan Reed's profile, and finds the supporting case study.
-- In the deployed version, I have also added an approval step. Eve can use generative UI for this kind of interaction, so the approval is presented as interface rather than another block of agent text.
-- Reply in the same thread:
+- I cannot deploy live, so I prepared the same agent in Slack. Vercel hosts it; AI Gateway routes the model; Workflow keeps it durable during approval.
+- Mention PitchBot with the Harborline request. Then reply:
 
 This looks good.
 
-- The agent does not send immediately. It shows the complete pitch in an approval card.
-- Click Approve. Show the same pitch appear in submitted-pitches.
-- The workflow moved from the terminal to Slack, but the tools, evidence, and approval boundary stayed the same.
+- The agent shows the pitch in an approval card. Click **Approve** and show it appear in `submitted-pitches`.
+- Same agent, now where the team works.
 
 ## Close
 
-- We started with a generic bot and some application data. First we gave the bot a job, then we gave it controlled access to the data.
-- We added one bounded capability at a time, composed those capabilities into a workflow, watched the tool calls, turned the expected behavior into an executable test, and then ran the same agent through Slack with human approval.
+- Build, run, inspect, evaluate, improve. Evals keep behavior stable; human review keeps the result good.
