@@ -4,40 +4,27 @@
 
 - Open [eve.dev](https://eve.dev). I am building this with Eve, Vercel's open-source agent framework. We use it internally for agents that manage work. I also used it to build an automated DX tester that attempts a set of Next.js tasks and reports what was difficult. Eve combines the AI SDK, AI Gateway, and Vercel Workflow; the agent itself is a directory of instructions, tools, and skills.
 - I used to be a consultant, and I built this example for a demo at my old company. Writing a good pitch means combining customer context, consultant profiles, and past work.
-- Switch to VS Code. I started with Eve, added Slack and synthetic data, and stopped there. `eve dev` is on the left and FX is on the right.
+- Switch to VS Code. I started with Eve, added Slack, synthetic data, and short pitch instructions. There are no tools or skills yet. `eve dev` is on the left and FX is on the right.
 - The loop is: change it, run it, inspect it, judge it.
 
-## Start with a generic bot
-
-- In `eve dev`, start a fresh conversation and send:
-
-Hello.
-
-- The runtime works, but the bot has no job yet.
-
-## Give it a job with FX
-
-- Swipe to the second terminal tab and show FX. This is another tool we built: an open-source coding agent I can run inside the repo. I am voice-prompting it with Wispr Flow.
-- FX uses AI Gateway: model access across providers, like OpenRouter, but integrated with Vercel billing and observability. Open `/models`, search `qwen`, switch to Claude Opus, toggle `/fast`, and confirm with `/status`.
-- Say:
-
-Make this an English consultant-pitching assistant. When someone says hello, briefly explain what it can do and ask which customer or opportunity they want help with. Keep the instructions short and clear.
-
-- Open `agent/instructions.md`. Send `Hello.` again. It knows its job, but it cannot access the data.
-
-## Try the pitch without tools
+## Run the pitch without tools
 
 - Explain the agent loop: the model reads the conversation, instructions, and available tools; it can call a tool, receive the result, and continue until it has a final answer. Right now the available-tool list is empty.
-- Paste the request we will use throughout the demo:
+- In `eve dev`, paste the request we will use throughout the demo:
 
 Write a short pitch for Harborline Logistics and recommend the best consultant for its data platform, integrations, and React dashboard.
 
-- Watch it struggle. It understands the task, but it cannot retrieve Harborline, search the consultants, or find evidence. There are no tool calls.
-- Now return to FX and give it one capability at a time, rerunning this same prompt after every change.
+- Watch it struggle. It can write plausible text, but it cannot retrieve Harborline, search consultants, or find evidence. It has no tools or pitch-writing skill.
+
+## Open FX
+
+- Swipe to the second terminal tab and show FX. This is another tool we built: an open-source coding agent I can run inside the repo. I am voice-prompting it with Wispr Flow.
+- FX uses AI Gateway: model access across providers, like OpenRouter, but integrated with Vercel billing and observability. Open `/models`, search `qwen`, switch to Claude Opus, toggle `/fast`, and confirm with `/status`.
+- Now give the agent one capability at a time and rerun the same pitch after every change.
 
 ## Add the tools
 
-- In the same FX conversation, say:
+- In FX, say:
 
 Give this agent a tool that looks up a sales opportunity by customer name or ID. Use the existing synthetic data and keep it simple.
 
