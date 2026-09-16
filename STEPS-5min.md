@@ -3,7 +3,7 @@
 ## Eve and the starter
 
 - Open [eve.dev](https://eve.dev). We have this new tool called Eve, and I want to try building something with it. These days, working with agents is as much about being curious, trying tools, and finding a workflow that works for you as it is about writing code.
-- Eve is Vercel's open-source framework for durable agents. It is not my specialty—I mainly work with Next.js—but I know the framework and have built a few useful agents with it. We use it internally for agents that manage work, and I used it to build an automated DX tester that attempts Next.js tasks and reports what was difficult.
+- Eve is Vercel's open-source framework for durable agents. Under the hood, it brings together the AI SDK, AI Gateway, and Vercel Workflow. It is not my specialty—I mainly work with Next.js—but I know the framework and have built a few useful agents with it. We use it internally for agents that manage work, and I used it to build an automated DX tester that attempts Next.js tasks and reports what was difficult.
 - I used to be a consultant, and writing pitches meant combining customer context, consultant profiles, and past work. I originally built this example for a demo at my old company.
 - Switch to VS Code. This is basically what I got from running the Eve CLI. Apart from synthetic demo data, the only integration I set up is the Slack connector. The agent itself is still plain.
 
@@ -19,7 +19,7 @@ Hey.
 
 - Swipe to FX. This is another open-source tool we built: a minimal coding agent designed to be fast and context-efficient. I normally use Codex or Claude, but I want to try this CLI agent inside the repo today and see how it goes. I am voice-prompting it with Wispr Flow.
 - That is really the point: try the tools, look at what they actually do, and work out which workflow fits you.
-- FX uses AI Gateway. Open `/models` and search `qwen`. Qwen is an open model family I can try alongside Claude or GPT through the same interface, billing, and observability. Switch to Claude Opus, toggle `/fast`, and confirm with `/status`.
+- FX uses AI Gateway. It gives me model access across providers, a little like OpenRouter, but integrated with Vercel billing and observability. Open `/models` and search `qwen`. Qwen is an open model family from Alibaba that I can try alongside Claude or GPT without changing integrations. Switch to Claude Opus, toggle `/fast`, and confirm with `/status`.
 - Say:
 
 I want this to be an English sales assistant for a consulting company. It should help me explore opportunities, compare consultants, and write concise, evidence-based pitches. It should never make up experience, availability, outcomes, or metrics.
@@ -37,6 +37,7 @@ Write a short pitch for Harborline Logistics and recommend the best consultant f
 
 This is the right job, but the agent cannot access my data. I need it to look up opportunities, search consultants, inspect their full profiles, and find relevant company case studies using the synthetic data already in this repo. Give it tools for that and a reusable workflow for writing the pitch. Keep it simple.
 
+- FX already has the repository's Eve context, so I can describe the behavior I want without dictating the framework implementation.
 - Watch the tools and skill appear. Tools provide access to data; the skill is the repeatable pitch workflow.
 - Run the same Harborline request again. This time, watch the opportunity, consultant search, profile, and case-study calls.
 - Read the result. Did it choose the right consultant, use relevant evidence, and write a useful pitch? Testing and judging the result is more important than simply generating the code.
@@ -56,7 +57,7 @@ I want confidence that this keeps working when I change it. Add one small Eve ev
 pnpm eval
 ```
 
-- Look at what passed and what did not. The point is to define what success means for this agent, then keep iterating until it reliably meets that bar.
+- Look at what passed and what did not. The point is to define what success means for this agent, then keep iterating until it reliably meets that bar. The people I am building for still have to judge whether the pitch is genuinely useful.
 
 ## Add an approval gate
 
@@ -79,6 +80,7 @@ The pitch is useful now, but I also need a way to submit it. Add a submit action
 This looks good.
 
 - The run pauses and Slack shows the approval. Click **Approve**, then show the pitch appear in `submitted-pitches`.
+- Same agent, now where the team already works.
 
 ## Close
 
