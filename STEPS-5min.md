@@ -1,62 +1,83 @@
 # FIVE-MINUTE DEMO STEPS
 
-## Eve and the setup
+## Eve and the starter
 
-- Open [eve.dev](https://eve.dev). I am building this with Eve, Vercel's open-source agent framework. We use it internally for agents that manage work. I also used it to build an automated DX tester that attempts a set of Next.js tasks and reports what was difficult. Eve combines the AI SDK, AI Gateway, and Vercel Workflow; the agent itself is a directory of instructions, tools, and skills.
-- I used to be a consultant, and I built this example for a demo at my old company. Writing a good pitch means combining customer context, consultant profiles, and past work.
-- Switch to VS Code. I started with Eve, added Slack, synthetic data, and short pitch instructions. There are no tools or skills yet. `eve dev` is on the left and FX is on the right.
-- The loop is: change it, run it, inspect it, judge it.
+- Open [eve.dev](https://eve.dev). We have this new tool called Eve, and I want to try building something with it. These days, working with agents is as much about being curious, trying tools, and finding a workflow that works for you as it is about writing code.
+- Eve is Vercel's open-source framework for durable agents. It is not my specialty—I mainly work with Next.js—but I know the framework and have built a few useful agents with it. We use it internally for agents that manage work, and I used it to build an automated DX tester that attempts Next.js tasks and reports what was difficult.
+- I used to be a consultant, and writing pitches meant combining customer context, consultant profiles, and past work. I originally built this example for a demo at my old company.
+- Switch to VS Code. This is basically what I got from running the Eve CLI. Apart from synthetic demo data, the only integration I set up is the Slack connector. The agent itself is still plain.
 
-## Run the pitch without tools
+## Start with the plain agent
 
-- Explain the agent loop: the model reads the conversation, instructions, and available tools; it can call a tool, receive the result, and continue until it has a final answer. Right now the available-tool list is empty.
-- In `eve dev`, paste the request we will use throughout the demo:
+- In `eve dev`, send:
+
+Hey.
+
+- It works, but it is only a generic assistant. Now I will give it a job.
+
+## Define the job with FX
+
+- Swipe to FX. This is another open-source tool we built: a minimal coding agent designed to be fast and context-efficient. I normally use Codex or Claude, but I want to try this CLI agent inside the repo today and see how it goes. I am voice-prompting it with Wispr Flow.
+- That is really the point: try the tools, look at what they actually do, and work out which workflow fits you.
+- FX uses AI Gateway. Open `/models` and search `qwen`. Qwen is an open model family I can try alongside Claude or GPT through the same interface, billing, and observability. Switch to Claude Opus, toggle `/fast`, and confirm with `/status`.
+- Say:
+
+I want this to be an English sales assistant for a consulting company. It should help me explore opportunities, compare consultants, and write concise, evidence-based pitches. It should never make up experience, availability, outcomes, or metrics.
+
+- Open `agent/instructions.md` as it changes. Eve hot-reloads it.
+- In `eve dev`, try the real task:
 
 Write a short pitch for Harborline Logistics and recommend the best consultant for its data platform, integrations, and React dashboard.
 
-- Watch it struggle. It can write plausible text, but it cannot retrieve Harborline, search consultants, or find evidence. It has no tools or pitch-writing skill.
+- It understands the job, but it cannot access the data. In the agent loop, the model can use its instructions and available tools; right now the tool list is empty.
 
-## Open FX
+## Add data access
 
-- Swipe to the second terminal tab and show FX. This is another tool we built: an open-source coding agent I can run inside the repo. I am voice-prompting it with Wispr Flow.
-- FX uses AI Gateway: one model catalog across providers, integrated with Vercel billing and observability.
-- Open `/models` and search `qwen`. Say: "Qwen is an open model family from Alibaba. Through AI Gateway, I can try it alongside Claude or GPT using the same interface, billing, and observability, and switch models without changing my code."
-- Switch to Claude Opus, toggle `/fast`, and confirm with `/status`.
-- Now build the complete workflow in one prompt.
+- Return to FX and say:
 
-## Build the agent
+This is the right job, but the agent cannot access my data. I need it to look up opportunities, search consultants, inspect their full profiles, and find relevant company case studies using the synthetic data already in this repo. Give it tools for that and a reusable workflow for writing the pitch. Keep it simple.
 
-- In FX, say:
+- Watch the tools and skill appear. Tools provide access to data; the skill is the repeatable pitch workflow.
+- Run the same Harborline request again. This time, watch the opportunity, consultant search, profile, and case-study calls.
+- Read the result. Did it choose the right consultant, use relevant evidence, and write a useful pitch? Testing and judging the result is more important than simply generating the code.
 
-I want this agent to write evidence-based customer pitches and recommend the right consultant. It should understand the opportunity, find suitable consultants, inspect the person it recommends, and find one relevant company case study before writing. Use the synthetic data already in the repo. Give it tools to access the data and a skill for the pitch workflow. Keep the main instructions short, keep everything in English, and do not invent details or metrics.
+## Turn the result into an eval
 
-- FX already has the repository's Eve context, so I can describe what I need instead of specifying the framework implementation.
-- Watch the tools and skill appear. Open them as FX works: tools provide access to data; the skill defines how the agent combines them for this job.
-- Eve hot-reloads the files. Paste the same Harborline request again.
-- Watch the calls, then read the pitch. Did it use the right data, choose the right consultant, find a relevant example, and write something useful? If not, iterate. That judgment is the real work.
+- Getting one good answer is not enough. When I build an agent, I want a repeatable way to check that it continues to produce a good result as I change the instructions, tools, or model.
+- Evals are a bit like unit tests for agents. Some checks can be deterministic: did the run succeed, and did it call the tools I expected? For subjective qualities with many valid answers, a separate judge model can read the result and score the things I care about.
+- Return to FX and say:
 
-## Add the eval
+I want confidence that this keeps working when I change it. Add one small Eve eval for the Harborline request. Check in code that the run succeeds and uses the right data tools. Then use a judge to check that the pitch is relevant, evidence-based, and does not invent claims or metrics. Keep the eval and the package script simple.
 
-- In FX, say:
+- Open the eval as it appears. The code assertions check observable behavior; the judge handles the quality check where there is no single correct wording.
+- Run:
 
-Now I want to know this keeps working. Create an eval for a Northstar Energy pitch. It should verify that the agent uses all four data tools, recommends Amelia Brooks, mentions the customer, and returns a real pitch. Keep the checks deterministic and use Eve's standard eval setup.
-
-- Open the eval, then run:
-
+```bash
 pnpm eval
+```
 
-- The eval protects the workflow and facts. The people I am building for still judge pitch quality.
+- Look at what passed and what did not. The point is to define what success means for this agent, then keep iterating until it reliably meets that bar.
 
-## Show the deployed Slack version
+## Add an approval gate
 
-- I cannot deploy live, so I prepared the same agent in Slack. Vercel hosts it; AI Gateway routes the model; Workflow keeps it durable during approval.
-- Mention PitchBot with the Harborline request. Then reply:
+- Return to FX and say:
+
+The pitch is useful now, but I also need a way to submit it. Add a submit action that posts the finished pitch to our configured Slack submissions channel. It should always require approval, and only the authenticated Slack user who started the conversation should be able to approve it. Use Eve's built-in approval flow and the Slack connection that is already here. Let Eve render the native approval UI for each channel; do not build custom Slack blocks.
+
+- Open the generated submit tool. The side effect is behind an approval gate, and the authorization comes from the Slack user attached to the Eve session.
+- The approval itself is not Slack-specific. Eve emits the request, parks the run while it waits, and resumes it after the person approves. `eve dev` can render that request in its own UI; the Slack channel automatically renders the same request as native Slack buttons.
+
+## Show the deployed version
+
+- I built the equivalent complete version on `main` and deployed it to Vercel, so I will show that instead of deploying live.
+- It uses the same Vercel stack we have been discussing: AI Gateway for the model, Vercel Workflow for the durable run and approval pause, Vercel Connect for Slack, and Agent Runs for observability.
+- In Slack, mention PitchBot with the same Harborline request. Watch the same tools run.
+- Reply:
 
 This looks good.
 
-- The agent shows the pitch in an approval card. Click **Approve** and show it appear in `submitted-pitches`.
-- Same agent, now where the team works.
+- The run pauses and Slack shows the approval. Click **Approve**, then show the pitch appear in `submitted-pitches`.
 
 ## Close
 
-- Build, run, inspect, evaluate, improve. Evals keep behavior stable; human review keeps the result good.
+- That is my loop: try a tool, describe what I need, inspect what the agent actually did, and then add an eval so I can keep improving it without losing the behavior I care about.
