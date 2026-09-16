@@ -62,10 +62,12 @@ pnpm eval
 
 - Return to FX and say:
 
-The pitch is useful now, but I also need a way to submit it. Add a submit action that posts the finished pitch to our configured Slack submissions channel. It should always require approval, and only the authenticated Slack user who started the conversation should be able to approve it. Use Eve's built-in approval flow and the Slack connection that is already here. Let Eve render the native approval UI for each channel; do not build custom Slack blocks.
+The pitch is useful now, but I also need a way to submit it. Add a submit action that posts the finished pitch to our configured Slack submissions channel. Always require human approval before it runs. Use Eve's built-in approval flow so Slack renders the approval buttons automatically—do not build custom Slack UI. Only the authenticated Slack user who started the thread should be allowed to approve it.
 
-- Open the generated submit tool. The side effect is behind an approval gate, and the authorization comes from the Slack user attached to the Eve session.
-- The approval itself is not Slack-specific. Eve emits the request, parks the run while it waits, and resumes it after the person approves. `eve dev` can render that request in its own UI; the Slack channel automatically renders the same request as native Slack buttons.
+- Point out the two pieces FX added:
+  - `approval: always()` triggers Eve's approval request. Eve parks the run, and Slack automatically turns that request into native buttons.
+  - `onInputResponse` authorizes the click. It accepts the authenticated Slack user who started the thread and rejects everyone else, leaving the approval pending.
+- In `eve dev`, the same approval request appears in Eve's own UI. The approval behavior belongs to the agent; each channel decides how to render it.
 
 ## Show the deployed version
 
